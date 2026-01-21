@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Add your sitemap location
+Sitemap: https://anantsoft.com/sitemap.xml
