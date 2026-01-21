@@ -65,12 +65,10 @@ export default function AdminSidebar() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{
-          x: isOpen ? 0 : '-100%'
-        }}
-        className="lg:translate-x-0 fixed top-0 left-0 z-40 h-screen w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-none"
+      <aside
+        className={`fixed top-0 left-0 z-40 h-screen w-64 bg-white border-r border-gray-200 shadow-lg transition-transform duration-300 lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -112,8 +110,8 @@ export default function AdminSidebar() {
                       onClick={() => setIsOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                         isActive
-                          ? 'bg-primary text-white shadow-md'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-primary'
+                          ? 'bg-blue-600 text-white shadow-md'
+                          : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -143,7 +141,7 @@ export default function AdminSidebar() {
             </button>
           </div>
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }

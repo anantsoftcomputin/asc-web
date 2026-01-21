@@ -1,13 +1,14 @@
 // app/careers/page.js
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
 import { Container, Button, Card, Badge } from "../../components/common";
 import { CTA } from "../../components/sections";
 import CareerApplyForm from "../../components/sections/CareerApplyForm";
+import { jobAPI } from "../../lib/firebase-admin";
 
 import {
   FaBriefcase,
@@ -25,46 +26,24 @@ import {
 } from "react-icons/fa";
 
 export default function CareersPage() {
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [jobOpenings, setJobOpenings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const departments = [
-    { id: "all", name: "All Departments" },
-    { id: "engineering", name: "Engineering" },
-    { id: "design", name: "Design" },
-    { id: "product", name: "Product" },
-    { id: "sales", name: "Sales" },
-    { id: "marketing", name: "Marketing" },
-  ];
+  useEffect(() => {
+    loadJobs();
+  }, []);
 
-  const jobOpenings = [
-    {
-      id: 1,
-      title: "Senior Full Stack Developer",
-      department: "engineering",
-      type: "Full-time",
-      location: "Ahmedabad, Gujarat",
-      experience: "5+ years",
-      salary: "18-25 LPA",
-      skills: ["React", "Node.js", "Python", "AWS"],
-      posted: "2 days ago",
-      urgent: true,
-      slug: "senior-full-stack-developer",
-    },
-    {
-      id: 2,
-      title: "UX/UI Designer",
-      department: "design",
-      type: "Full-time",
-      location: "Remote",
-      experience: "3+ years",
-      salary: "12-18 LPA",
-      skills: ["Figma", "Adobe XD", "User Research"],
-      posted: "1 week ago",
-      slug: "ux-ui-designer",
-    },
-    // Add more job openings or fetch from API
-  ];
+  const loadJobs = async () => {
+    setLoading(true);
+    const result = await jobAPI.getAll();
+    if (result.success) {
+      // Only show active jobs on frontend
+      const activeJobs = result.data.filter(job => job.status === 'active');
+      setJobOpenings(activeJobs);
+    }
+    setLoading(false);
+  };
 
   const benefits = [
     {
@@ -111,12 +90,9 @@ export default function CareersPage() {
   const filteredJobs = jobOpenings
     .filter(
       (job) =>
-        selectedDepartment === "all" || job.department === selectedDepartment
-    )
-    .filter(
-      (job) =>
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.department.toLowerCase().includes(searchTerm.toLowerCase())
+        job.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.type?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   return (
@@ -193,7 +169,7 @@ export default function CareersPage() {
               className="mt-12 grid grid-cols-3 gap-8"
             >
               {[
-                { value: "50+", label: "Open Positions" },
+                { value: jobOpenings.length + "+", label: "Open Positions" },
                 { value: "35+", label: "Countries" },
                 { value: "96%", label: "Employee Satisfaction" },
               ].map((stat) => (
@@ -209,113 +185,106 @@ export default function CareersPage() {
         </Container>
       </section>
 
-      {/* Departments */}
-      <section className="py-12 bg-white">
-        <Container>
-          <div className="flex flex-wrap justify-center gap-4">
-            {departments.map((dept) => (
-              <button
-                key={dept.id}
-                onClick={() => setSelectedDepartment(dept.id)}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedDepartment === dept.id
-                    ? "bg-primary-600 text-white shadow-lg shadow-primary-200/50"
-                    : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                {dept.name}
-              </button>
-            ))}
-          </div>
-        </Container>
-      </section>
-
       {/* Job Listings */}
       <section className="py-12 bg-gray-50">
         <Container>
-          <div className="grid md:grid-cols-2 gap-6">
-            {filteredJobs.map((job) => (
-              <motion.div
-                key={job.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <Card className="p-6 hover:shadow-lg transition-shadow duration-300">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                        {job.title}
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant="primary"
-                          className="bg-primary-100 text-primary-600"
-                        >
-                          {job.department}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-gray-100 text-gray-600"
-                        >
-                          {job.type}
-                        </Badge>
-                        {job.urgent && (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading jobs...</p>
+            </div>
+          ) : filteredJobs.length === 0 ? (
+            <div className="text-center py-12">
+              <FaBriefcase className="mx-auto text-5xl text-gray-300 mb-4" />
+              <p className="text-gray-600 text-lg">No job openings found at the moment</p>
+              <p className="text-gray-500 text-sm mt-2">Check back later for new opportunities</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {filteredJobs.map((job) => (
+                <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="p-6 hover:shadow-lg transition-shadow duration-300">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                          {job.title}
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
                           <Badge
-                            variant="accent"
-                            className="bg-red-100 text-red-600"
+                            variant="primary"
+                            className="bg-primary-100 text-primary-600"
                           >
-                            Urgent
+                            {job.type}
                           </Badge>
-                        )}
+                          {job.featured && (
+                            <Badge
+                              variant="accent"
+                              className="bg-yellow-100 text-yellow-600"
+                            >
+                              Featured
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-500">{job.posted}</div>
-                  </div>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <FaMapMarkerAlt className="w-4 h-4" />
-                      <span>{job.location}</span>
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <FaMapMarkerAlt className="w-4 h-4" />
+                        <span>{job.location}</span>
+                      </div>
+                      {job.experience && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <FaRegClock className="w-4 h-4" />
+                          <span>{job.experience}</span>
+                        </div>
+                      )}
+                      {job.salary && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <FaDollarSign className="w-4 h-4" />
+                          <span>{job.salary}</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <FaRegClock className="w-4 h-4" />
-                      <span>{job.experience}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <FaDollarSign className="w-4 h-4" />
-                      <span>{job.salary}</span>
-                    </div>
-                  </div>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {job.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
+                    <p className="text-gray-600 mb-4 line-clamp-2">{job.description}</p>
 
-                  <Link href={`/careers/${job.slug}`} className="block">
+                    {Array.isArray(job.requirements) && job.requirements.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {job.requirements.slice(0, 3).map((req, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
+                          >
+                            {req}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     <Button variant="outline" className="w-full justify-center">
-                      View Details
+                      Apply Now
                     </Button>
-                  </Link>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </Container>
       </section>
+      
       {/* Career Apply Form */}
       <CareerApplyForm
-        jobOptions={[
-          { id: "1", title: "Senior Full Stack Developer"},
-          { id: "2", title: "UX/UI Designer"},
-        ]} />
+        jobOptions={jobOpenings.map(job => ({
+          id: job.id,
+          title: job.title
+        }))} 
+      />
       {/* Benefits */}
       <section className="py-20 bg-white">
         <Container>
