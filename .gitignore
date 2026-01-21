@@ -47,3 +47,9 @@ firestore.rules
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Documentation files with credentials
+ADMIN_SETUP.md
+IMPLEMENTATION_SUMMARY.md
+QUICKSTART.md
+GIT_SETUP.md
+ADMIN_PAGE_TEMPLATE.js
