@@ -1,21 +1,18 @@
-'use client';
-
-import './globals.css'       
+import './globals.css'
 import Providers from '../providers/Providers'
-import { Navbar, Footer } from '../components/layout'
-import { usePathname } from 'next/navigation'
+import LayoutWrapper from '../components/layout/LayoutWrapper'
+
+export const metadata = {
+  title: 'Anant Soft Computing',
+  description: 'Custom software development, CRM, ERP, mobile apps, and digital solutions.',
+};
 
 export default function RootLayout({ children }) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith('/admin');
-
   return (
     <html lang="en">
       <body>
         <Providers>
-          {!isAdminRoute && <Navbar />}
-          <main className="flex-grow">{children}</main>
-          {!isAdminRoute && <Footer />}
+          <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
       </body>
     </html>

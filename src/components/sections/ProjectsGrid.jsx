@@ -12,6 +12,23 @@ import { CTA } from "../sections";
 import { FaTimes, FaGlobe, FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 import Image from "next/image";
 
+function ProjectImage({ src, alt, gradient, fill, className, sizes }) {
+  const [errored, setErrored] = useState(false);
+  if (errored) {
+    return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      onError={() => setErrored(true)}
+    />
+  );
+}
+
 const PortfolioPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
@@ -348,9 +365,10 @@ const PortfolioPage = () => {
                   >
                     <div className="relative overflow-hidden">
                       <div className="relative h-56 w-full">
-                        <Image
+                        <ProjectImage
                           src={project.image}
                           alt={project.title}
+                          gradient={project.gradient}
                           fill
                           className="object-cover transform group-hover:scale-110 transition-transform duration-700"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -431,9 +449,10 @@ const PortfolioPage = () => {
               <div className="h-full flex flex-col">
                 {/* Modal Header */}
                 <div className="relative h-72">
-                  <Image
+                  <ProjectImage
                     src={selectedProject.image}
                     alt={selectedProject.title}
+                    gradient={selectedProject.gradient}
                     fill
                     className="w-full h-full object-cover"
                   />
@@ -553,8 +572,9 @@ const PortfolioPage = () => {
                             Project Links
                           </h3>
                           <div className="space-y-3">
-                            {Object.entries(selectedProject.links).map(
-                              ([key, url]) => (
+                            {Object.entries(selectedProject.links)
+                              .filter(([, url]) => url !== null)
+                              .map(([key, url]) => (
                                 <a
                                   key={key}
                                   href={url}
@@ -575,8 +595,7 @@ const PortfolioPage = () => {
                                     {key.replace("_", " ")}
                                   </span>
                                 </a>
-                              )
-                            )}
+                              ))}
                           </div>
                         </Card>
 
@@ -621,29 +640,33 @@ const PortfolioPage = () => {
                         </Card>
 
                         <div className="flex gap-4">
-                          <Button
-                            variant="primary"
-                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
-                            onClick={() =>
-                              window.open(selectedProject.links.live, "_blank")
-                            }
-                          >
-                            <FaGlobe className="mr-2" />
-                            View Live
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="flex-1"
-                            onClick={() =>
-                              window.open(
-                                selectedProject.links.case_study,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <FaExternalLinkAlt className="mr-2" />
-                            Case Study
-                          </Button>
+                          {selectedProject.links.live && (
+                            <Button
+                              variant="primary"
+                              className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
+                              onClick={() =>
+                                window.open(selectedProject.links.live, "_blank")
+                              }
+                            >
+                              <FaGlobe className="mr-2" />
+                              View Live
+                            </Button>
+                          )}
+                          {selectedProject.links.case_study && (
+                            <Button
+                              variant="outline"
+                              className="flex-1"
+                              onClick={() =>
+                                window.open(
+                                  selectedProject.links.case_study,
+                                  "_blank"
+                                )
+                              }
+                            >
+                              <FaExternalLinkAlt className="mr-2" />
+                              Case Study
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>

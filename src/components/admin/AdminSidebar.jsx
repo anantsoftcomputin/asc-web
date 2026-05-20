@@ -9,6 +9,7 @@ import {
   FaTachometerAlt,
   FaBlog,
   FaProjectDiagram,
+  FaImages,
   FaBriefcase,
   FaUsers,
   FaComments,
@@ -22,7 +23,7 @@ import {
 const menuItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: FaTachometerAlt },
   { name: 'Blog Posts', href: '/admin/blogs', icon: FaBlog },
-  { name: 'Portfolio', href: '/admin/portfolio', icon: FaProjectDiagram },
+  { name: 'Portfolio', href: '/admin/portfolio', icon: FaImages },
   { name: 'Projects', href: '/admin/projects', icon: FaProjectDiagram },
   { name: 'Jobs', href: '/admin/jobs', icon: FaBriefcase },
   { name: 'Team Members', href: '/admin/team', icon: FaUsers },

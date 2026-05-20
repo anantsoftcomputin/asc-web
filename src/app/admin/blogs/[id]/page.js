@@ -37,7 +37,7 @@ export default function BlogEditor() {
 
   const loadBlog = async () => {
     setLoading(true);
-    const result = await blogAPI.getById('blogs', params.id);
+    const result = await blogAPI.getById(params.id);
     if (result.success) {
       setFormData(result.data);
     }

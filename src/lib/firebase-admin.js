@@ -109,28 +109,12 @@ export const firebaseAdmin = {
       return { success: false, error: error.message };
     }
   },
-
-  // Get by ID (added for consistency)
-  async getById(collectionName, id) {
-    try {
-      const docRef = doc(db, collectionName, id);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        return { success: true, data: { id: docSnap.id, ...docSnap.data() } };
-      } else {
-        return { success: false, error: "Document not found" };
-      }
-    } catch (error) {
-      console.error("Error reading document:", error);
-      return { success: false, error: error.message };
-    }
-  }
 };
 
 // Collection-specific helpers
 export const blogAPI = {
   getAll: () => firebaseAdmin.getAll('blogs', { orderBy: { field: 'createdAt', direction: 'desc' } }),
+  getById: (id) => firebaseAdmin.getById('blogs', id),
   getBySlug: async (slug) => {
     const result = await firebaseAdmin.getAll('blogs', { where: { field: 'slug', operator: '==', value: slug } });
     return result.success && result.data.length > 0 ? { success: true, data: result.data[0] } : { success: false };
