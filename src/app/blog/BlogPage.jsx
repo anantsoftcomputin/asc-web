@@ -2,10 +2,9 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { Search, ArrowUp } from "lucide-react";
 import { blogAPI } from "../../lib/firebase-admin";
-import Image from "next/image";
 
 const PRODUCTION_CATEGORIES = [
   "All",
@@ -26,18 +25,18 @@ export default function BlogPage() {
   const [pageSize] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    loadBlogs();
-  }, []);
-
-  const loadBlogs = async () => {
-    setLoading(true);
+  const loadBlogs = useCallback(async () => {
     const result = await blogAPI.getAll();
     if (result.success) {
       setBlogPosts(result.data);
     }
     setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadBlogs();
+  }, [loadBlogs]);
 
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 300);
@@ -56,20 +55,15 @@ export default function BlogPage() {
         (p.excerpt && p.excerpt.toLowerCase().includes(q));
       return catMatch && searchMatch;
     });
-  }, [selectedCategory, searchQuery]);
-
-  useEffect(() => setCurrentPage(1), [selectedCategory, searchQuery]);
+  }, [blogPosts, selectedCategory, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filteredPosts.length / pageSize));
-
-  useEffect(() => {
-    if (currentPage > totalPages) setCurrentPage(totalPages);
-  }, [currentPage, totalPages]);
+  const safeCurrentPage = Math.min(currentPage, totalPages);
 
   const currentPosts = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
+    const start = (safeCurrentPage - 1) * pageSize;
     return filteredPosts.slice(start, start + pageSize);
-  }, [filteredPosts, currentPage, pageSize]);
+  }, [filteredPosts, safeCurrentPage, pageSize]);
 
   const goToPage = (n) => {
     const page = Math.max(1, Math.min(totalPages, n));
@@ -127,7 +121,10 @@ export default function BlogPage() {
                 type="search"
                 placeholder="Search articles..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full px-6 py-4 bg-white rounded-full shadow-lg focus:ring-2 focus:ring-primary-500 focus:outline-none"
               />
               <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -146,7 +143,10 @@ export default function BlogPage() {
                 return (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                      setCurrentPage(1);
+                    }}
                     className={`px-6 py-2 rounded-full transition-all duration-300 ${
                       active
                         ? "bg-primary-600 text-white shadow-lg shadow-primary-600/20"
@@ -171,14 +171,25 @@ export default function BlogPage() {
                   key={post.id}
                   className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col"
                 >
-                  <div className="aspect-w-16 aspect-h-9">
-                    <Image
-                      src={post.thumbnail}
-                      alt={post.title}
-                      width={800}
-                      height={450}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="aspect-w-16 aspect-h-9 h-48">
+                    {post.thumbnail ? (
+                      <img
+                        src={post.thumbnail}
+                        alt={post.title}
+                        className="w-full h-48 object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className={`w-full h-48 bg-gradient-to-br from-primary-400 to-primary-600 items-center justify-center ${post.thumbnail ? 'hidden' : 'flex'}`}
+                    >
+                      <span className="text-white text-3xl font-bold opacity-30">
+                        {post.category?.charAt(0) || 'A'}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="p-5 flex flex-col flex-grow">
@@ -229,14 +240,21 @@ export default function BlogPage() {
 
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <img
-                          src={post.author.avatar}
-                          alt={post.author.name}
-                          className="w-6 h-6 rounded-full"
-                        />
+                        {post.author?.avatar ? (
+                          <img
+                            src={post.author.avatar}
+                            alt={post.author?.name || 'Author'}
+                            className="w-6 h-6 rounded-full object-cover"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                            {(post.author?.name || 'A').charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <div>
                           <div className="text-xs font-medium text-gray-900">
-                            {post.author.name}
+                            {post.author?.name || "AnantSoftComputing Team"}
                           </div>
                         </div>
                       </div>
@@ -259,8 +277,8 @@ export default function BlogPage() {
           {/* Pagination */}
           <div className="flex justify-center items-center space-x-4 mt-8">
             <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => goToPage(safeCurrentPage - 1)}
+              disabled={safeCurrentPage === 1}
               className="p-2 rounded-full bg-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
@@ -282,7 +300,7 @@ export default function BlogPage() {
             <div className="flex space-x-2">
               {Array.from({ length: totalPages }).map((_, i) => {
                 const page = i + 1;
-                const active = page === currentPage;
+                const active = page === safeCurrentPage;
                 return (
                   <button
                     key={page}
@@ -301,8 +319,8 @@ export default function BlogPage() {
             </div>
 
             <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              onClick={() => goToPage(safeCurrentPage + 1)}
+              disabled={safeCurrentPage === totalPages}
               className="p-2 rounded-full bg-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg

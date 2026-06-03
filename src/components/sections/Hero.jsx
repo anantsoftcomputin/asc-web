@@ -65,17 +65,17 @@ const Hero = () => {
             className="text-4xl font-bold tracking-tight text-dark sm:text-6xl md:text-7xl"
             variants={itemVariants}
           >
-            Transforming Ideas into
-            <span className="block text-primary-600">Digital Excellence</span>
+            Custom Software Development
+            <span className="block text-primary-600">& IT Services in India</span>
           </motion.h1>
 
           <motion.p
             className="mt-6 text-lg leading-8 text-gray-600 sm:text-xl"
             variants={itemVariants}
           >
-            We craft innovative software solutions that empower businesses to
-            thrive in the digital age. From custom CRM systems to mobile
-            applications, we bring your vision to life.
+            AnantSoftComputing delivers custom software, CRM systems, ERP platforms,
+            mobile apps, and result-driven SEO services — helping businesses across
+            India and globally scale with confidence.
           </motion.p>
 
           <motion.div

@@ -9,7 +9,6 @@ import { blogAPI } from '../../../lib/firebase-admin';
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState([]);
-  const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -21,36 +20,23 @@ export default function BlogsPage() {
     loadBlogs();
   }, []);
 
-  useEffect(() => {
-    filterBlogs();
-  }, [searchTerm, selectedCategory, blogs]);
-
   const loadBlogs = async () => {
     setLoading(true);
     const result = await blogAPI.getAll();
     if (result.success) {
       setBlogs(result.data);
-      setFilteredBlogs(result.data);
     }
     setLoading(false);
   };
 
-  const filterBlogs = () => {
-    let filtered = blogs;
-
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter(blog => blog.category === selectedCategory);
-    }
-
-    if (searchTerm) {
-      filtered = filtered.filter(blog =>
-        blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    setFilteredBlogs(filtered);
-  };
+  // Derived — no separate state needed
+  const filteredBlogs = blogs.filter(blog => {
+    const matchesCategory = selectedCategory === 'All' || blog.category === selectedCategory;
+    const matchesSearch = !searchTerm ||
+      blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this blog post?')) {

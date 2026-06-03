@@ -113,11 +113,13 @@ const MobileAppService = () => {
                 Mobile App Development
               </Badge>
               <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
-                Transform Your Ideas Into Mobile Reality
+                Mobile App Development
+                <span className="block text-2xl mt-2 font-normal text-gray-600">iOS & Android Apps Built for Performance & Scale</span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                We craft beautiful, high-performance mobile applications that deliver 
-                exceptional user experiences across all platforms.
+                We design and develop high-performance iOS and Android mobile applications —
+                native and cross-platform — that deliver exceptional user experiences
+                and are built to scale with your business.
               </p>
               <div className="flex gap-4">
                 <Button 
@@ -456,21 +458,21 @@ const MobileAppService = () => {
                 name: "Sarah Johnson",
                 role: "CEO",
                 company: "HealthTech Solutions",
-                image: "/api/placeholder/64/64",
+                image: "",
                 quote: "The team delivered an exceptional healthcare app that exceeded our expectations."
               },
               {
                 name: "Michael Chen",
                 role: "Product Manager",
                 company: "EduTech Inc",
-                image: "/api/placeholder/64/64",
+                image: "",
                 quote: "Outstanding development process and excellent communication throughout."
               },
               {
                 name: "Amanda Smith",
                 role: "Founder",
                 company: "FinanceFlow",
-                image: "/api/placeholder/64/64",
+                image: "",
                 quote: "Their expertise in fintech app development is truly remarkable."
               }
             ].map((testimonial, index) => (
@@ -483,12 +485,9 @@ const MobileAppService = () => {
               >
                 <Card className="p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-16 h-16 rounded-full"
-                      fill
-                    />
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-xl shrink-0">
+                      {testimonial.name.charAt(0)}
+                    </div>
                     <div>
                       <h3 className="font-semibold">{testimonial.name}</h3>
                       <p className="text-sm text-gray-600">{testimonial.role}</p>

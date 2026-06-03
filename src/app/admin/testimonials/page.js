@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 export default function TestimonialsManagement() {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState(null);
@@ -55,7 +56,7 @@ export default function TestimonialsManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
 
     const data = {
       ...formData,
@@ -66,7 +67,6 @@ export default function TestimonialsManagement() {
     if (editingTestimonial) {
       const result = await testimonialAPI.update(editingTestimonial.id, data);
       if (result.success) {
-        alert('Testimonial updated successfully!');
         loadTestimonials();
         closeModal();
       } else {
@@ -76,14 +76,13 @@ export default function TestimonialsManagement() {
       data.createdAt = new Date().toISOString();
       const result = await testimonialAPI.create(data);
       if (result.success) {
-        alert('Testimonial added successfully!');
         loadTestimonials();
         closeModal();
       } else {
         alert('Error: ' + result.error);
       }
     }
-    setLoading(false);
+    setSaving(false);
   };
 
   const handleEdit = (testimonial) => {
@@ -362,15 +361,15 @@ export default function TestimonialsManagement() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-primary text-white py-2 rounded-lg hover:bg-primary-600 disabled:opacity-50 transition-colors"
                   >
-                    {loading ? 'Saving...' : editingTestimonial ? 'Update Testimonial' : 'Add Testimonial'}
+                    {saving ? 'Saving...' : editingTestimonial ? 'Update Testimonial' : 'Add Testimonial'}
                   </button>
                   <button
                     type="button"
                     onClick={closeModal}
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
                   >
                     Cancel

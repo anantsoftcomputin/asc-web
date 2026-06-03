@@ -15,6 +15,29 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 
+const READ_TIMEOUT_MS = 8000;
+
+const isProductionBuild = () =>
+  typeof window === "undefined" &&
+  (process.env.NEXT_PHASE === "phase-production-build" ||
+    process.env.npm_lifecycle_event === "build");
+
+const withTimeout = async (promise, label) => {
+  let timeoutId;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error(`${label} timed out after ${READ_TIMEOUT_MS}ms`));
+        }, READ_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
 // Generic CRUD operations
 export const firebaseAdmin = {
   // Create
@@ -34,12 +57,20 @@ export const firebaseAdmin = {
 
   // Read single document
   async getById(collectionName, id) {
+    if (isProductionBuild()) {
+      return { success: false, error: "Firestore skipped during production build" };
+    }
+
     try {
       const docRef = doc(db, collectionName, id);
-      const docSnap = await getDoc(docRef);
+      const docSnap = await withTimeout(
+        getDoc(docRef),
+        `Reading ${collectionName}/${id}`
+      );
       
       if (docSnap.exists()) {
-        return { success: true, data: { id: docSnap.id, ...docSnap.data() } };
+        const { id: _ignored, ...data } = docSnap.data();
+        return { success: true, data: { id: docSnap.id, ...data } };
       } else {
         return { success: false, error: "Document not found" };
       }
@@ -51,6 +82,10 @@ export const firebaseAdmin = {
 
   // Read all documents
   async getAll(collectionName, options = {}) {
+    if (isProductionBuild()) {
+      return { success: true, data: [] };
+    }
+
     try {
       let q = collection(db, collectionName);
       
@@ -70,10 +105,16 @@ export const firebaseAdmin = {
         q = query(q, ...constraints);
       }
       
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await withTimeout(
+        getDocs(q),
+        `Reading ${collectionName}`
+      );
       const documents = [];
       querySnapshot.forEach((doc) => {
-        documents.push({ id: doc.id, ...doc.data() });
+        // Destructure to discard any 'id' field stored in document data —
+        // the Firestore document ID (doc.id) must always win.
+        const { id: _ignored, ...data } = doc.data();
+        documents.push({ id: doc.id, ...data });
       });
       
       return { success: true, data: documents };
@@ -164,4 +205,5 @@ export const teamAPI = {
 export const contactAPI = {
   create: (data) => firebaseAdmin.create('contacts', data),
   getAll: () => firebaseAdmin.getAll('contacts', { orderBy: { field: 'createdAt', direction: 'desc' } }),
+  delete: (id) => firebaseAdmin.delete('contacts', id),
 };

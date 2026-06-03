@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { blogAPI } from "../../../lib/firebase-admin";
 import Link from "next/link";
 import { Card } from "../../../components/common";
+import JsonLd from "../../../components/common/JsonLd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -33,13 +34,26 @@ export async function generateMetadata({ params }) {
   return {
     title: `${post.title} | AnantSoftComputing`,
     description: post.excerpt,
+    alternates: {
+      canonical: `https://anantsoft.com/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [post.thumbnail],
+      images: post.thumbnail ? [{ url: post.thumbnail, alt: post.title }] : undefined,
       type: "article",
       publishedTime: post.publishedAt,
-      authors: [post.author?.name || 'ASC'],
+      modifiedTime: post.updatedAt,
+      authors: [post.author?.name || 'AnantSoftComputing'],
+      section: post.category || 'Technology',
+      tags: post.tags || [],
+      url: `https://anantsoft.com/blog/${slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: post.thumbnail ? [post.thumbnail] : undefined,
     },
   };
 }
@@ -60,7 +74,38 @@ export default async function BlogPostPage({ params }) {
     notFound();
   }
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": post.thumbnail || undefined,
+    "datePublished": post.publishedAt,
+    "dateModified": post.updatedAt || post.publishedAt,
+    "author": {
+      "@type": "Person",
+      "name": post.author?.name || "AnantSoftComputing Team"
+    },
+    "publisher": { "@id": "https://anantsoft.com/#organization" },
+    "url": `https://anantsoft.com/blog/${slug}`,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://anantsoft.com/blog/${slug}`
+    },
+    "articleSection": post.category || "Technology",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://anantsoft.com" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://anantsoft.com/blog" },
+        { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://anantsoft.com/blog/${slug}` }
+      ]
+    }
+  };
+
   return (
+    <>
+    <JsonLd data={articleSchema} />
     <div className="min-h-screen bg-white py-12">
       {/* Back Button */}
       <div className="container mx-auto px-4 mt-8">
@@ -95,11 +140,13 @@ export default async function BlogPostPage({ params }) {
             </div>
 
             {/* Thumbnail */}
-            <img
-              src={post.thumbnail}
-              alt={post.title}
-              className="w-full h-72 md:h-96 object-cover rounded-xl shadow-sm mb-10"
-            />
+            {post.thumbnail && (
+              <img
+                src={post.thumbnail}
+                alt={post.title}
+                className="w-full h-72 md:h-96 object-cover rounded-xl shadow-sm mb-10"
+              />
+            )}
 
             {/* Content */}
             <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
@@ -152,9 +199,9 @@ export default async function BlogPostPage({ params }) {
                       </li>
                     ),
                     // Images: make sure images have margin
-                    img: ({ node, ...props }) => (
+                    img: ({ node, alt = "", ...props }) => (
                       // className can be merged as required
-                      <img className="rounded-lg my-6" {...props} />
+                      <img alt={alt} className="rounded-lg my-6" {...props} />
                     ),
                     // Code blocks (optional)
                     code: ({ node, inline, className, children, ...props }) =>
@@ -175,7 +222,7 @@ export default async function BlogPostPage({ params }) {
                       ),
                   }}
                 >
-                  {post.content}
+                  {post.content || ""}
                 </ReactMarkdown>
               </div>
             </Card>
@@ -183,5 +230,6 @@ export default async function BlogPostPage({ params }) {
         </div>
       </div>
     </div>
+    </>
   );
 }

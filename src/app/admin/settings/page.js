@@ -8,11 +8,11 @@ export default function SettingsManagement() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
   const [settings, setSettings] = useState({
-    siteName: 'Anant Soft Computing',
-    siteTagline: 'Transforming Ideas into Digital Reality',
-    contactEmail: 'info@anantsoft.com',
-    contactPhone: '+1 234 567 8900',
-    address: '123 Tech Street, Silicon Valley, CA 94025',
+    siteName: 'AnantSoftComputing',
+    siteTagline: 'Custom Software Development & IT Services in India',
+    contactEmail: 'support@anantsoftcomputing.com',
+    contactPhone: '+91-9638544455',
+    address: '1 C Satyam Apartment, Vishwas Colony Alkapuri, Vadodara – 390007, Gujarat, India',
     metaTitle: '',
     metaDescription: '',
     metaKeywords: '',

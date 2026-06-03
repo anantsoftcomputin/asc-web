@@ -168,14 +168,14 @@ export default function AdminDashboard() {
             <span className="font-medium text-gray-700 group-hover:text-primary">New Blog Post</span>
           </Link>
           <Link
-            href="/admin/projects/new"
+            href="/admin/projects"
             className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-gray-300 hover:border-primary hover:bg-primary-50 transition-all group"
           >
             <FaPlus className="w-5 h-5 text-gray-400 group-hover:text-primary" />
             <span className="font-medium text-gray-700 group-hover:text-primary">New Project</span>
           </Link>
           <Link
-            href="/admin/jobs/new"
+            href="/admin/jobs"
             className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-gray-300 hover:border-primary hover:bg-primary-50 transition-all group"
           >
             <FaPlus className="w-5 h-5 text-gray-400 group-hover:text-primary" />

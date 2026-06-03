@@ -116,11 +116,13 @@ const CustomDevelopment = () => {
                 Custom Development
               </Badge>
               <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
-                Tailored Solutions for Your Unique Challenges
+                Custom Software Development
+                <span className="block text-2xl mt-2 font-normal text-gray-600">ERP, Hospital, NGO & Enterprise Platforms Built to Order</span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                We specialize in developing custom software solutions that perfectly 
-                align with your business needs and drive digital transformation.
+                We build bespoke software solutions tailored to your exact requirements —
+                from enterprise ERP systems to hospital management, NGO platforms,
+                and Gaushala management software. Scalable, secure, and delivered on time.
               </p>
               <div className="flex gap-4">
                 <Button 
@@ -542,13 +544,8 @@ const CustomDevelopment = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="overflow-hidden group">
-                  <div className="relative">
-                    <Image
-                      src={study.image}
-                      alt={study.title}
-                      className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500"
-                      fill
-                    />
+                  <div className="relative h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                    <span className="text-white text-4xl font-bold opacity-20">{study.category.charAt(0)}</span>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4">
                         <Badge variant="primary" className="bg-white/90 backdrop-blur-sm">

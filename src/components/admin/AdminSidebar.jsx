@@ -17,7 +17,8 @@ import {
   FaBars,
   FaTimes,
   FaSignOutAlt,
-  FaCog
+  FaCog,
+  FaDatabase,
 } from 'react-icons/fa';
 
 const menuItems = [
@@ -30,6 +31,7 @@ const menuItems = [
   { name: 'Testimonials', href: '/admin/testimonials', icon: FaComments },
   { name: 'Contact Messages', href: '/admin/contacts', icon: FaEnvelope },
   { name: 'Settings', href: '/admin/settings', icon: FaCog },
+  { name: 'Data Tools', href: '/admin/migrate', icon: FaDatabase },
 ];
 
 export default function AdminSidebar() {

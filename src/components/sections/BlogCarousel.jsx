@@ -6,27 +6,27 @@ import ReadMoreButton from "../blog/ReadMoreButton";
 export default function BlogCarousel({ posts }) {
   const sample = [
     {
-      id: 1,
+      id: "sample-blog-1",
       tag: "SEO",
       date: "2024-11-25",
       title: "Common SEO Mistakes to Avoid for Better Rankings",
       excerpt: "In the competitive world of digital marketing,...",
       image:
         "https://anantsoftcomputing.com/media/blog/posts/seo-mistakes-to-avoid-when-getting-started.webp",
-      author: { name: "asc", avatar: "/assets/profile-CrSvehcA.jpg" },
+      author: { name: "AnantSoftComputing Team", avatar: "" },
     },
     {
-      id: 2,
+      id: "sample-blog-2",
       tag: "SEO",
       date: "2024-11-25",
       title: "SEO for E-commerce Websites: Strategies to Increase Sales",
       excerpt: "In the highly competitive world of e-commerce,...",
       image:
         "https://anantsoftcomputing.com/media/blog/posts/7-Best-SEO-Strategies-for-Ecommerce-Website.png",
-      author: { name: "asc", avatar: "/assets/profile-CrSvehcA.jpg" },
+      author: { name: "AnantSoftComputing Team", avatar: "" },
     },
     {
-      id: 3,
+      id: "sample-blog-3",
       tag: "SEO",
       date: "2024-11-25",
       title:
@@ -34,21 +34,27 @@ export default function BlogCarousel({ posts }) {
       excerpt: "The digital marketing landscape is undergoing a...",
       image:
         "https://anantsoftcomputing.com/media/blog/posts/AI-and-Predictive-Analytics-in-SEO-d675455bf1e8683fd51846f455ac36aa.webp",
-      author: { name: "asc", avatar: "/assets/profile-CrSvehcA.jpg" },
+      author: { name: "AnantSoftComputing Team", avatar: "" },
     },
     {
-      id: 4,
+      id: "sample-blog-4",
       tag: "SEO",
       date: "2024-11-25",
       title: "Top 10 SEO Strategies for Small Businesses in 2025",
       excerpt: "In 2025, staying visible online is crucial...",
       image:
         "https://anantsoftcomputing.com/media/blog/posts/small-business-seo-scaled_QJj4TgM.webp",
-      author: { name: "asc", avatar: "/assets/profile-CrSvehcA.jpg" },
+      author: { name: "AnantSoftComputing Team", avatar: "" },
     },
   ];
 
-  const data = posts && posts.length ? posts : sample;
+  const data = (posts && posts.length ? posts : sample).map((post) => ({
+    ...post,
+    tag: post.tag || post.category || "Technology",
+    date: post.date || post.publishedAt,
+    image: post.image || post.thumbnail,
+    author: post.author || { name: "AnantSoftComputing Team", avatar: "" },
+  }));
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -86,13 +92,21 @@ export default function BlogCarousel({ posts }) {
                 className="min-w-[280px] sm:min-w-[320px] md:min-w-[360px] snap-start bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-full"
               >
                 <div className="h-[200px] w-full relative">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    fill
-                  />
+                  {post.image ? (
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      className="object-cover"
+                      loading="lazy"
+                      fill
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-400 to-primary-600">
+                      <span className="text-3xl font-bold text-white/40">
+                        {post.tag.charAt(0)}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-5 flex flex-col flex-grow">
@@ -133,12 +147,20 @@ export default function BlogCarousel({ posts }) {
 
                   <div className="mt-auto flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Image
-                        src={post.author?.avatar}
-                        alt={post.author?.name}
-                        className="w-6 h-6 rounded-full"
-                        fill
-                      />
+                      {post.author?.avatar ? (
+                        <div className="relative h-6 w-6 overflow-hidden rounded-full">
+                          <Image
+                            src={post.author.avatar}
+                            alt={post.author?.name || "Author"}
+                            className="object-cover"
+                            fill
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white">
+                          {(post.author?.name || "A").charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <div>
                         <div className="text-xs font-medium text-gray-900">
                           {post.author?.name}

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 export default function JobsManagement() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
@@ -41,7 +42,7 @@ export default function JobsManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
 
     const data = {
       ...formData,
@@ -53,7 +54,6 @@ export default function JobsManagement() {
     if (editingJob) {
       const result = await jobAPI.update(editingJob.id, data);
       if (result.success) {
-        alert('Job updated successfully!');
         loadJobs();
         closeModal();
       } else {
@@ -63,14 +63,13 @@ export default function JobsManagement() {
       data.createdAt = new Date().toISOString();
       const result = await jobAPI.create(data);
       if (result.success) {
-        alert('Job posted successfully!');
         loadJobs();
         closeModal();
       } else {
         alert('Error: ' + result.error);
       }
     }
-    setLoading(false);
+    setSaving(false);
   };
 
   const handleEdit = (job) => {
@@ -349,15 +348,15 @@ export default function JobsManagement() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-primary text-white py-2 rounded-lg hover:bg-primary-600 disabled:opacity-50 transition-colors"
                   >
-                    {loading ? 'Saving...' : editingJob ? 'Update Job' : 'Post Job'}
+                    {saving ? 'Saving...' : editingJob ? 'Update Job' : 'Post Job'}
                   </button>
                   <button
                     type="button"
                     onClick={closeModal}
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
                   >
                     Cancel

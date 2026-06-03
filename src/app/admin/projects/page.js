@@ -2,34 +2,63 @@
 
 import { useState, useEffect } from 'react';
 import { projectAPI } from '../../../lib/firebase-admin';
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaFolder, FaImage } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaSearch, FaFolder, FaImage, FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+
+const GRADIENTS = [
+  { value: 'from-pink-400 to-purple-600', label: 'Pink → Purple' },
+  { value: 'from-green-400 to-blue-500', label: 'Green → Blue' },
+  { value: 'from-indigo-400 to-blue-700', label: 'Indigo → Blue' },
+  { value: 'from-purple-400 to-indigo-600', label: 'Purple → Indigo' },
+  { value: 'from-red-400 to-pink-600', label: 'Red → Pink' },
+  { value: 'from-yellow-400 to-orange-600', label: 'Yellow → Orange' },
+  { value: 'from-blue-400 to-blue-600', label: 'Blue' },
+  { value: 'from-green-500 to-emerald-700', label: 'Green → Emerald' },
+  { value: 'from-purple-500 to-purple-700', label: 'Deep Purple' },
+  { value: 'from-cyan-400 to-blue-600', label: 'Cyan → Blue' },
+  { value: 'from-primary-400 to-primary-600', label: 'Primary' },
+];
+
+const CATEGORIES = [
+  'healthcare', 'education', 'crm', 'enterprise',
+  'e-commerce', 'mobile', 'web', 'ngo', 'franchise', 'petcare', 'other',
+];
+
+const EMPTY_FORM = {
+  title: '',
+  shortDesc: '',
+  fullDesc: '',
+  detailedDesc: '',
+  category: 'web',
+  technologies: '',
+  features: '',
+  results: '',
+  image: '',
+  gradient: 'from-primary-400 to-primary-600',
+  liveLink: '',
+  githubLink: '',
+  stat1Label: '', stat1Value: '',
+  stat2Label: '', stat2Value: '',
+  stat3Label: '', stat3Value: '',
+  // Case study fields
+  problemStatement: '',
+  ourApproach: '',
+  solutionDelivered: '',
+  caseStudyOutcome: '',
+  featured: false,
+};
 
 export default function ProjectsManagement() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    tags: '',
-    client: '',
-    duration: '',
-    team: '',
-    challenge: '',
-    solution: '',
-    results: '',
-    technologies: '',
-    image: '',
-    featured: false,
-  });
-
-  const categories = ['Web Development', 'Mobile App', 'E-commerce', 'CRM', 'Enterprise', 'Other'];
+  const [activeTab, setActiveTab] = useState('details');
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   useEffect(() => {
     loadProjects();
@@ -38,141 +67,116 @@ export default function ProjectsManagement() {
   const loadProjects = async () => {
     setLoading(true);
     const result = await projectAPI.getAll();
-    if (result.success) {
-      setProjects(result.data);
-    }
+    if (result.success) setProjects(result.data);
     setLoading(false);
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      if (file.size > 1024 * 1024) {
-        alert('Image size should be less than 1MB');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        setImagePreview(base64String);
-        setFormData({ ...formData, image: base64String });
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    if (file.size > 1024 * 1024) { alert('Image size should be less than 1MB'); return; }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
+    setSaving(true);
     const data = {
       ...formData,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
-      technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
-      updatedAt: new Date().toISOString(),
+      technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
+      features: formData.features.split('\n').map(f => f.trim()).filter(Boolean),
+      results: formData.results.split('\n').map(r => r.trim()).filter(Boolean),
     };
-
-    if (editingProject) {
-      const result = await projectAPI.update(editingProject.id, data);
-      if (result.success) {
-        alert('Project updated successfully!');
-        loadProjects();
-        closeModal();
-      } else {
-        alert('Error: ' + result.error);
-      }
-    } else {
-      data.createdAt = new Date().toISOString();
-      const result = await projectAPI.create(data);
-      if (result.success) {
-        alert('Project created successfully!');
-        loadProjects();
-        closeModal();
-      } else {
-        alert('Error: ' + result.error);
-      }
-    }
-    setLoading(false);
+    const result = editingProject
+      ? await projectAPI.update(editingProject.id, data)
+      : await projectAPI.create(data);
+    if (result.success) { loadProjects(); closeModal(); }
+    else alert('Error: ' + result.error);
+    setSaving(false);
   };
 
   const handleEdit = (project) => {
     setEditingProject(project);
     setFormData({
       title: project.title || '',
-      description: project.description || '',
-      category: project.category || '',
-      tags: Array.isArray(project.tags) ? project.tags.join(', ') : '',
-      client: project.client || '',
-      duration: project.duration || '',
-      team: project.team || '',
-      challenge: project.challenge || '',
-      solution: project.solution || '',
-      results: project.results || '',
+      shortDesc: project.shortDesc || '',
+      fullDesc: project.fullDesc || project.description || '',
+      detailedDesc: project.detailedDesc || '',
+      category: project.category || 'web',
       technologies: Array.isArray(project.technologies) ? project.technologies.join(', ') : '',
+      features: Array.isArray(project.features) ? project.features.join('\n') : '',
+      results: Array.isArray(project.results) ? project.results.join('\n') : '',
       image: project.image || '',
+      gradient: project.gradient || 'from-primary-400 to-primary-600',
+      liveLink: project.liveLink || '',
+      githubLink: project.githubLink || '',
+      stat1Label: project.stat1Label || '', stat1Value: project.stat1Value || '',
+      stat2Label: project.stat2Label || '', stat2Value: project.stat2Value || '',
+      stat3Label: project.stat3Label || '', stat3Value: project.stat3Value || '',
+      problemStatement: project.problemStatement || '',
+      ourApproach: project.ourApproach || '',
+      solutionDelivered: project.solutionDelivered || '',
+      caseStudyOutcome: project.caseStudyOutcome || '',
       featured: project.featured || false,
     });
     setImagePreview(project.image || null);
+    setActiveTab('details');
     setShowModal(true);
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this project?')) {
-      const result = await projectAPI.delete(id);
-      if (result.success) {
-        alert('Project deleted successfully!');
-        loadProjects();
-      } else {
-        alert('Error: ' + result.error);
-      }
-    }
+    if (!confirm('Delete this project?')) return;
+    const result = await projectAPI.delete(id);
+    if (result.success) loadProjects();
+    else alert('Error: ' + result.error);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setEditingProject(null);
     setImagePreview(null);
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      tags: '',
-      client: '',
-      duration: '',
-      team: '',
-      challenge: '',
-      solution: '',
-      results: '',
-      technologies: '',
-      image: '',
-      featured: false,
-    });
+    setFormData(EMPTY_FORM);
+    setActiveTab('details');
   };
 
-  const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'all' || project.category === filterCategory;
-    return matchesSearch && matchesCategory;
+  const set = (field) => (e) =>
+    setFormData(prev => ({ ...prev, [field]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }));
+
+  const filteredProjects = projects.filter(p => {
+    const matchSearch = !searchTerm ||
+      p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.shortDesc?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCat = filterCategory === 'all' || p.category === filterCategory;
+    return matchSearch && matchCat;
   });
+
+  const inputCls = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent";
+  const textareaCls = `${inputCls} resize-none`;
+  const labelCls = "block text-sm font-medium text-gray-700 mb-1";
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      {/* Header — Add Project button is ALWAYS here */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Projects Management</h1>
-          <p className="text-gray-600 mt-1">Manage detailed case studies and project showcases</p>
+          <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
+          <p className="text-gray-600 mt-1">Manage portfolio projects · {projects.length} total</p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors"
+          onClick={() => { setShowModal(true); }}
+          className="flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-lg hover:bg-primary-600 transition-colors shadow font-semibold text-sm"
         >
-          <FaPlus /> Add Project
+          <FaPlus /> Add New Project
         </button>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-sm space-y-4">
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg shadow-sm space-y-3">
         <div className="relative">
           <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
           <input
@@ -184,19 +188,11 @@ export default function ProjectsManagement() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          <button
-            onClick={() => setFilterCategory('all')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              filterCategory === 'all' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            All
-          </button>
-          {categories.map(cat => (
+          {['all', ...CATEGORIES].map(cat => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
-              className={`px-4 py-2 rounded-lg transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-sm capitalize transition-colors ${
                 filterCategory === cat ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -206,10 +202,37 @@ export default function ProjectsManagement() {
         </div>
       </div>
 
+      {/* Count + secondary add button when filtered */}
+      {!loading && (
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <span>Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}</span>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-1.5 text-primary hover:underline font-medium"
+          >
+            <FaPlus className="w-3 h-3" /> Add Project
+          </button>
+        </div>
+      )}
+
+      {/* Content */}
       {loading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <div className="text-center py-16">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
           <p className="mt-4 text-gray-600">Loading projects...</p>
+        </div>
+      ) : filteredProjects.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200">
+          <FaFolder className="mx-auto text-gray-300 text-6xl mb-4" />
+          <p className="text-gray-500 text-lg mb-2">
+            {searchTerm || filterCategory !== 'all' ? 'No projects match your filter' : 'No projects yet'}
+          </p>
+          <button
+            onClick={() => setShowModal(true)}
+            className="mt-3 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors font-medium"
+          >
+            <FaPlus /> Add Your First Project
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -218,69 +241,45 @@ export default function ProjectsManagement() {
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+              transition={{ delay: index * 0.05 }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100"
             >
               {project.image ? (
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover"
-                />
+                <img src={project.image} alt={project.title} className="w-full h-40 object-cover" />
               ) : (
-                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                  <FaImage className="text-gray-400 text-4xl" />
+                <div className={`w-full h-40 bg-gradient-to-br ${project.gradient || 'from-primary-400 to-primary-600'} flex items-center justify-center`}>
+                  <FaImage className="text-white text-4xl opacity-40" />
                 </div>
               )}
-              
               <div className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-lg text-gray-900 line-clamp-1">{project.title}</h3>
+                <div className="flex items-start justify-between mb-1">
+                  <h3 className="font-semibold text-gray-900 line-clamp-1 flex-1">{project.title}</h3>
                   {project.featured && (
-                    <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full">
-                      Featured
-                    </span>
+                    <span className="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-700 rounded-full shrink-0">⭐ Featured</span>
                   )}
                 </div>
-                
-                {project.category && (
-                  <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full mb-2">
-                    {project.category}
-                  </span>
-                )}
-                
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.description}</p>
-                
-                {project.client && (
-                  <p className="text-xs text-gray-500 mb-2">Client: {project.client}</p>
-                )}
-
+                <span className="inline-block px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full mb-2 capitalize">{project.category}</span>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.shortDesc || project.description}</p>
                 {Array.isArray(project.technologies) && project.technologies.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {project.technologies.slice(0, 3).map((tech, idx) => (
-                      <span key={idx} className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
-                        {tech}
-                      </span>
+                    {project.technologies.slice(0, 3).map(t => (
+                      <span key={t} className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">{t}</span>
                     ))}
                     {project.technologies.length > 3 && (
-                      <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
-                        +{project.technologies.length - 3}
-                      </span>
+                      <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded">+{project.technologies.length - 3}</span>
                     )}
                   </div>
                 )}
-
-                <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                  <button
-                    onClick={() => handleEdit(project)}
-                    className="flex-1 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
-                  >
+                {project.problemStatement && (
+                  <div className="mb-3 px-2 py-1.5 bg-amber-50 rounded text-xs text-amber-700">
+                    📋 Case study included
+                  </div>
+                )}
+                <div className="flex gap-2 pt-3 border-t border-gray-100">
+                  <button onClick={() => handleEdit(project)} className="flex-1 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 text-sm font-medium">
                     <FaEdit className="inline mr-1" /> Edit
                   </button>
-                  <button
-                    onClick={() => handleDelete(project.id)}
-                    className="flex-1 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
-                  >
+                  <button onClick={() => handleDelete(project.id)} className="flex-1 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm font-medium">
                     <FaTrash className="inline mr-1" /> Delete
                   </button>
                 </div>
@@ -290,206 +289,236 @@ export default function ProjectsManagement() {
         </div>
       )}
 
-      {!loading && filteredProjects.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-lg">
-          <FaFolder className="mx-auto text-gray-400 text-5xl mb-4" />
-          <p className="text-gray-600">No projects found</p>
-        </div>
-      )}
-
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold mb-4">
-                {editingProject ? 'Edit Project' : 'Add New Project'}
+          <div className="bg-white rounded-xl w-full max-w-4xl max-h-[92vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
+              <h2 className="text-xl font-bold text-gray-900">
+                {editingProject ? `Edit: ${editingProject.title}` : 'Add New Project'}
               </h2>
+              <button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg">
+                <FaTimes className="text-gray-500" />
+              </button>
+            </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Project Image
-                  </label>
-                  <div className="flex items-center gap-4">
-                    {imagePreview ? (
-                      <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
-                    ) : (
-                      <div className="w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <FaImage className="text-gray-400 text-3xl" />
+            {/* Tabs */}
+            <div className="flex border-b px-6 shrink-0">
+              {[
+                { id: 'details', label: 'Project Details' },
+                { id: 'casestudy', label: '📋 Case Study' },
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab.id
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+              {/* ── TAB: Project Details ── */}
+              {activeTab === 'details' && (
+                <div className="p-6 space-y-5">
+                  {/* Image */}
+                  <div>
+                    <label className={labelCls}>Project Image</label>
+                    <div className="flex items-start gap-4">
+                      <div className={`w-32 h-28 rounded-lg overflow-hidden shrink-0 bg-gradient-to-br ${formData.gradient}`}>
+                        {imagePreview
+                          ? <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          : <div className="w-full h-full flex items-center justify-center"><FaImage className="text-white text-3xl opacity-50" /></div>
+                        }
                       </div>
-                    )}
-                    <div className="flex-1">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-600"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Max 1MB, JPG/PNG</p>
+                      <div className="flex-1 space-y-2">
+                        <input type="file" accept="image/*" onChange={handleImageChange}
+                          className="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-600" />
+                        <input type="url"
+                          value={formData.image.startsWith('data:') ? '' : formData.image}
+                          onChange={(e) => { setFormData(p => ({ ...p, image: e.target.value })); setImagePreview(e.target.value); }}
+                          placeholder="Or paste image URL: https://..."
+                          className={`${inputCls} text-sm`} />
+                        <p className="text-xs text-gray-400">Max 1MB for uploaded files</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Project Title *</label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
+                  {/* Title + Category */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelCls}>Project Title *</label>
+                      <input type="text" required value={formData.title} onChange={set('title')} className={inputCls} placeholder="e.g., Pawppy.in" />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Category *</label>
+                      <select required value={formData.category} onChange={set('category')} className={inputCls}>
+                        {CATEGORIES.map(c => <option key={c} value={c} className="capitalize">{c}</option>)}
+                      </select>
+                    </div>
                   </div>
 
+                  {/* Short Desc + Gradient */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelCls}>Short Description * <span className="font-normal text-gray-400">(card subtitle)</span></label>
+                      <input type="text" required value={formData.shortDesc} onChange={set('shortDesc')} className={inputCls} placeholder="One-line project summary" />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Card Gradient</label>
+                      <select value={formData.gradient} onChange={set('gradient')} className={inputCls}>
+                        {GRADIENTS.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Full Description */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                    <select
-                      required
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
+                    <label className={labelCls}>Full Description * <span className="font-normal text-gray-400">(modal overview paragraph)</span></label>
+                    <textarea required rows={3} value={formData.fullDesc} onChange={set('fullDesc')} className={textareaCls} placeholder="A 2-3 sentence summary of the project..." />
+                  </div>
+
+                  {/* Detailed Description */}
+                  <div>
+                    <label className={labelCls}>Detailed Description <span className="font-normal text-gray-400">(in-depth background)</span></label>
+                    <textarea rows={4} value={formData.detailedDesc} onChange={set('detailedDesc')} className={textareaCls} placeholder="Longer description used in the project modal..." />
+                  </div>
+
+                  {/* Technologies */}
+                  <div>
+                    <label className={labelCls}>Technologies <span className="font-normal text-gray-400">(comma-separated)</span></label>
+                    <input type="text" value={formData.technologies} onChange={set('technologies')} className={inputCls} placeholder="React, Node.js, Firebase, MongoDB" />
+                  </div>
+
+                  {/* Features + Results */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelCls}>Key Features <span className="font-normal text-gray-400">(one per line)</span></label>
+                      <textarea rows={5} value={formData.features} onChange={set('features')} className={`${textareaCls} text-sm`} placeholder={"Real-time booking system\nSecure payment gateway\nPush notifications"} />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Results & Impact <span className="font-normal text-gray-400">(one per line)</span></label>
+                      <textarea rows={5} value={formData.results} onChange={set('results')} className={`${textareaCls} text-sm`} placeholder={"40% faster booking\nTrusted by 5,000+ users"} />
+                    </div>
+                  </div>
+
+                  {/* Links */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelCls}>Live URL</label>
+                      <input type="url" value={formData.liveLink} onChange={set('liveLink')} className={inputCls} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className={labelCls}>GitHub URL</label>
+                      <input type="url" value={formData.githubLink} onChange={set('githubLink')} className={inputCls} placeholder="https://github.com/..." />
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div>
+                    <label className={labelCls}>Project Stats <span className="font-normal text-gray-400">(up to 3 metrics)</span></label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[1, 2, 3].map(n => (
+                        <div key={n} className="border border-gray-200 rounded-lg p-3 space-y-2">
+                          <input type="text" value={formData[`stat${n}Label`]} onChange={set(`stat${n}Label`)} className={`${inputCls} text-sm`} placeholder="Label (e.g. users)" />
+                          <input type="text" value={formData[`stat${n}Value`]} onChange={set(`stat${n}Value`)} className={`${inputCls} text-sm`} placeholder="Value (e.g. 5,000+)" />
+                        </div>
                       ))}
-                    </select>
+                    </div>
+                  </div>
+
+                  {/* Featured */}
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" id="featured" checked={formData.featured} onChange={set('featured')} className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
+                    <label htmlFor="featured" className="text-sm text-gray-700">Featured project (pinned at top)</label>
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-                  <textarea
-                    rows={3}
-                    required
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
+              {/* ── TAB: Case Study ── */}
+              {activeTab === 'casestudy' && (
+                <div className="p-6 space-y-5">
+                  <div className="p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
+                    Case study content appears in the project detail modal and helps visitors understand the real-world problem you solved. Write it like a story — problem, approach, solution, outcome.
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
-                    <input
-                      type="text"
-                      value={formData.client}
-                      onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    <label className={labelCls}>🔴 The Client's Challenge <span className="font-normal text-gray-400">(What problem were they facing?)</span></label>
+                    <textarea
+                      rows={5}
+                      value={formData.problemStatement}
+                      onChange={set('problemStatement')}
+                      className={textareaCls}
+                      placeholder="Describe the real-world problem or pain the client was experiencing before they came to us. Include specific obstacles, inefficiencies, or lost opportunities they faced..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-                    <input
-                      type="text"
-                      value={formData.duration}
-                      onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="e.g., 3 months"
+                    <label className={labelCls}>🟡 Our Approach & Methodology <span className="font-normal text-gray-400">(How did we plan to solve it?)</span></label>
+                    <textarea
+                      rows={5}
+                      value={formData.ourApproach}
+                      onChange={set('ourApproach')}
+                      className={textareaCls}
+                      placeholder="Describe how we analysed the problem, what research we did, the architecture decisions we made, and how we planned the solution..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Team Size</label>
-                    <input
-                      type="text"
-                      value={formData.team}
-                      onChange={(e) => setFormData({ ...formData, team: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="e.g., 5 developers"
+                    <label className={labelCls}>🟢 The Solution We Built <span className="font-normal text-gray-400">(What did we actually deliver?)</span></label>
+                    <textarea
+                      rows={5}
+                      value={formData.solutionDelivered}
+                      onChange={set('solutionDelivered')}
+                      className={textareaCls}
+                      placeholder="Describe the specific features, systems, integrations, and technologies we built. Be concrete — what does the final product do?"
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelCls}>📈 Business Impact & Outcome <span className="font-normal text-gray-400">(What changed for the client?)</span></label>
+                    <textarea
+                      rows={5}
+                      value={formData.caseStudyOutcome}
+                      onChange={set('caseStudyOutcome')}
+                      className={textareaCls}
+                      placeholder="Describe the measurable results — faster processes, cost savings, revenue growth, user adoption, efficiency gains, customer satisfaction improvements..."
                     />
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Challenge</label>
-                  <textarea
-                    rows={3}
-                    value={formData.challenge}
-                    onChange={(e) => setFormData({ ...formData, challenge: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="What problem did the project solve?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Solution</label>
-                  <textarea
-                    rows={3}
-                    value={formData.solution}
-                    onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="How was the problem solved?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Results</label>
-                  <textarea
-                    rows={3}
-                    value={formData.results}
-                    onChange={(e) => setFormData({ ...formData, results: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="What were the outcomes and metrics?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Technologies (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={formData.technologies}
-                    onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="React, Node.js, MongoDB, AWS"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tags (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="web, mobile, enterprise"
-                  />
-                </div>
-
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="featured"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                  />
-                  <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
-                    Featured project
-                  </label>
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-primary text-white py-2 rounded-lg hover:bg-primary-600 disabled:opacity-50 transition-colors"
-                  >
-                    {loading ? 'Saving...' : editingProject ? 'Update Project' : 'Create Project'}
+              {/* Footer Actions */}
+              <div className="px-6 py-4 border-t bg-gray-50 flex gap-3 shrink-0">
+                {activeTab === 'details' && (
+                  <button type="button" onClick={() => setActiveTab('casestudy')}
+                    className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary-50 text-sm font-medium">
+                    Next: Case Study →
                   </button>
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    disabled={loading}
-                    className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
-                  >
-                    Cancel
+                )}
+                {activeTab === 'casestudy' && (
+                  <button type="button" onClick={() => setActiveTab('details')}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 text-sm font-medium">
+                    ← Back: Details
                   </button>
-                </div>
-              </form>
-            </div>
+                )}
+                <div className="flex-1" />
+                <button type="button" onClick={closeModal} disabled={saving}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 text-sm font-medium">
+                  Cancel
+                </button>
+                <button type="submit" disabled={saving}
+                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 text-sm font-semibold">
+                  {saving ? 'Saving...' : editingProject ? 'Update Project' : 'Add Project'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

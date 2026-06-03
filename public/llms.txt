@@ -1,0 +1,111 @@
+# AnantSoftComputing
+
+> AnantSoftComputing is a full-service software development company based in Vadodara, Gujarat, India. Founded in 2013, we design and build custom software, CRM systems, ERP platforms, iOS/Android mobile apps, and provide result-driven SEO services for businesses across India and globally.
+
+## About
+
+AnantSoftComputing (also known as Anant Soft Computing) has been delivering software solutions since 2013. Our team of 50+ engineers, designers, and consultants has completed 250+ projects with a 95%+ client satisfaction rate. We serve startups, SMEs, and enterprises across India, the USA, the UK, Australia, and the UAE.
+
+**Headquarters:** 1 C Satyam Apartment, Vishwas Colony Alkapuri, Vadodara – 390007, Gujarat, India
+**Phone:** +91-9638544455
+**Email:** support@anantsoftcomputing.com
+**Website:** https://anantsoft.com
+
+## Services
+
+### Custom Software Development
+We build bespoke enterprise software tailored to specific business requirements — including ERP systems, hospital management platforms, Gaushala management systems, NGO platforms, and any complex web application. We handle the full lifecycle from requirements to deployment.
+
+- Enterprise Resource Planning (ERP)
+- Hospital Management Systems
+- Gaushala (Cow Shelter) Management Software
+- NGO & Non-Profit Platforms
+- Custom Web Applications
+
+### CRM Development
+We design and develop custom Customer Relationship Management (CRM) systems that help businesses automate sales pipelines, manage customer relationships, and gain data-driven insights.
+
+- Contact and lead management
+- Sales pipeline automation
+- Analytics and reporting dashboards
+- Third-party integrations (email, payment, APIs)
+- Mobile-accessible CRM
+
+### Mobile App Development
+We develop native and cross-platform mobile applications for iOS and Android, focusing on performance, intuitive UX, and scalability.
+
+- iOS App Development (Swift/SwiftUI)
+- Android App Development (Kotlin/Java)
+- Cross-Platform Apps (React Native, Flutter)
+- Mobile UI/UX Design
+- App maintenance and support
+
+### SEO Services
+We provide comprehensive search engine optimization services to help businesses rank higher on Google and other search engines and drive sustained organic traffic.
+
+- Technical SEO Audit
+- Keyword Research & Strategy
+- On-Page SEO Optimization
+- Link Building
+- Local SEO
+- Content Strategy
+- Performance Tracking & Reporting
+
+## Technology Stack
+
+**Backend:** Python, Django, Node.js, REST APIs
+**Frontend:** React, Next.js, Tailwind CSS
+**Mobile:** React Native, Flutter
+**Databases:** PostgreSQL, MongoDB, Firebase
+**Cloud:** AWS, Google Cloud
+**Other:** Docker, CI/CD, Firebase, Stripe integrations
+
+## Key Statistics
+
+- **Founded:** 2013
+- **Projects Delivered:** 250+
+- **Team Size:** 50+
+- **Client Satisfaction:** 95%+
+- **Countries Served:** India, USA, UK, Australia, UAE
+
+## Pages
+
+- Homepage: https://anantsoft.com
+- About Us: https://anantsoft.com/about
+- Services Overview: https://anantsoft.com/services
+- CRM Development: https://anantsoft.com/services/crm
+- Mobile App Development: https://anantsoft.com/services/mobile
+- SEO Services: https://anantsoft.com/services/seo
+- Custom Software Development: https://anantsoft.com/services/custom
+- Portfolio & Case Studies: https://anantsoft.com/portfolio
+- Blog: https://anantsoft.com/blog
+- Careers: https://anantsoft.com/careers
+- Contact Us: https://anantsoft.com/contact
+- Privacy Policy: https://anantsoft.com/privacy-policy
+
+## Blog Topics
+
+The AnantSoftComputing blog covers:
+- Custom software development best practices
+- CRM and ERP implementation guides
+- Mobile app development trends and tutorials
+- SEO strategy and technical guides
+- Technology stack deep-dives
+- Business digitisation advice for Indian SMEs
+
+## Frequently Asked Questions
+
+**What industries do you serve?**
+Healthcare, retail, e-commerce, education, non-profit, agriculture, finance, and manufacturing.
+
+**Where are you located?**
+Vadodara, Gujarat, India — with clients worldwide.
+
+**Do you offer post-launch support?**
+Yes, we provide ongoing maintenance, updates, and support for all software we develop.
+
+**What is your development process?**
+Discovery → Strategy → Design → Development → Testing → Launch → Support.
+
+**How can I request a quote?**
+Visit https://anantsoft.com/contact or email support@anantsoftcomputing.com.

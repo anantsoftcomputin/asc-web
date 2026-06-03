@@ -24,8 +24,8 @@ export default function BlogEditor() {
     readTime: '',
     publishedAt: new Date().toISOString().split('T')[0],
     author: {
-      name: 'asc',
-      avatar: '/assets/profile-CrSvehcA.jpg'
+      name: 'AnantSoftComputing Team',
+      avatar: ''
     }
   });
 
@@ -33,13 +33,19 @@ export default function BlogEditor() {
     if (isEdit) {
       loadBlog();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   const loadBlog = async () => {
     setLoading(true);
     const result = await blogAPI.getById(params.id);
     if (result.success) {
-      setFormData(result.data);
+      const data = result.data;
+      // Normalize publishedAt: convert Timestamp to string if needed
+      if (data.publishedAt?.toDate) {
+        data.publishedAt = data.publishedAt.toDate().toISOString().split('T')[0];
+      }
+      setFormData(data);
     }
     setLoading(false);
   };

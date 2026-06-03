@@ -113,11 +113,13 @@ const CRMService = () => {
                 CRM Development
               </Badge>
               <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
-                Custom CRM Solutions for Your Business Growth
+                Custom CRM Software Development
+                <span className="block text-2xl mt-2 font-normal text-gray-600">Automate Sales. Manage Relationships. Scale with Confidence.</span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                Transform your customer relationships with our tailored CRM solutions. 
-                Streamline operations, boost productivity, and drive growth with powerful automation.
+                Build a powerful, tailor-made CRM system with AnantSoftComputing.
+                We develop CRM solutions that automate your sales pipelines, centralize customer data,
+                streamline operations, and integrate with your existing tools — all built to scale.
               </p>
               <div className="flex gap-4">
                 <Button 
@@ -137,14 +139,9 @@ const CRMService = () => {
                   {[...Array(4)].map((_, i) => (
                     <div
                       key={i}
-                      className="w-12 h-12 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center"
+                      className="w-12 h-12 rounded-full border-2 border-white bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm"
                     >
-                      <Image 
-                        src={`/api/placeholder/48/48`} 
-                        alt={`Client ${i + 1}`}
-                        className="w-full h-full rounded-full"
-                        fill
-                      />
+                      {String.fromCharCode(65 + i)}
                     </div>
                   ))}
                 </div>

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 export default function PortfolioManagement() {
   const [portfolio, setPortfolio] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
@@ -81,7 +82,7 @@ export default function PortfolioManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
 
     const data = {
       ...formData,
@@ -93,7 +94,6 @@ export default function PortfolioManagement() {
     if (editingProject) {
       const result = await portfolioAPI.update(editingProject.id, data);
       if (result.success) {
-        alert('Project updated successfully!');
         loadPortfolio();
         closeModal();
       } else {
@@ -103,14 +103,13 @@ export default function PortfolioManagement() {
       data.createdAt = new Date().toISOString();
       const result = await portfolioAPI.create(data);
       if (result.success) {
-        alert('Project added successfully!');
         loadPortfolio();
         closeModal();
       } else {
         alert('Error: ' + result.error);
       }
     }
-    setLoading(false);
+    setSaving(false);
   };
 
   const handleEdit = (project) => {
@@ -392,15 +391,15 @@ export default function PortfolioManagement() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-primary text-white py-2 rounded-lg hover:bg-primary-600 disabled:opacity-50 transition-colors"
                   >
-                    {loading ? 'Saving...' : editingProject ? 'Update' : 'Add Project'}
+                    {saving ? 'Saving...' : editingProject ? 'Update' : 'Add Project'}
                   </button>
                   <button
                     type="button"
                     onClick={closeModal}
-                    disabled={loading}
+                    disabled={saving}
                     className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
                   >
                     Cancel

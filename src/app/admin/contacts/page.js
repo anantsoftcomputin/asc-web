@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaBuilding, FaTrash, FaEye } from 'react-icons/fa';
-import { contactAPI, firebaseAdmin } from '../../../lib/firebase-admin';
+import { contactAPI } from '../../../lib/firebase-admin';
 
 export default function ContactsPage() {
   const [contacts, setContacts] = useState([]);
@@ -25,7 +25,7 @@ export default function ContactsPage() {
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this message?')) {
-      const result = await firebaseAdmin.delete('contacts', id);
+      const result = await contactAPI.delete(id);
       if (result.success) {
         loadContacts();
       }

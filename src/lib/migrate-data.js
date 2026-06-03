@@ -126,7 +126,7 @@ const testimonialsData = [
     name: "Dr. Rajesh Kumar",
     role: "Medical Director",
     organization: "City Hospital",
-    image: "/api/placeholder/80/80",
+    image: "",
     quote: "The hospital management system developed by Anant Soft Computing has revolutionized our operations. The system is intuitive, efficient, and has significantly improved our patient care workflow.",
     rating: 5
   },
@@ -135,7 +135,7 @@ const testimonialsData = [
     name: "Amit Sharma",
     role: "Managing Director",
     organization: "Global Education Consultants",
-    image: "/api/placeholder/80/80",
+    image: "",
     quote: "Their overseas education CRM has been a game-changer for our consultancy. The attention to detail and custom features have helped us manage student applications more effectively.",
     rating: 5
   },
@@ -144,7 +144,7 @@ const testimonialsData = [
     name: "Priya Patel",
     role: "Founder",
     organization: "Learning Edge Academy",
-    image: "/api/placeholder/80/80",
+    image: "",
     quote: "The learning management system exceeded our expectations. It's user-friendly, feature-rich, and the support team has been exceptional throughout the implementation.",
     rating: 5
   }
@@ -155,31 +155,31 @@ const teamMembersData = [
   {
     name: 'Jigar Desai',
     role: 'CEO & Founder',
-    image: '/api/placeholder/400/400',
+    image: '',
     bio: 'Visionary leader with 15+ years of software industry experience.',
   },
   {
     name: 'Vijendrasinh',
     role: 'SEO Manager',
-    image: '/api/placeholder/400/400',
+    image: '',
     bio: 'Expert in enterprise solutions and system architecture.',
   },
   {
     name: 'Mehul Machhi',
     role: 'Back End Developer',
-    image: '/api/placeholder/400/400',
+    image: '',
     bio: 'Full-stack developer specializing in scalable applications.',
   },
   {
     name: 'Sagar Ramani',
     role: 'Front End Developer',
-    image: '/api/placeholder/400/400',
+    image: '',
     bio: 'Experienced front-end developer with a passion for crafting responsive, user-friendly interfaces.',
   },
   {
     name: 'Darshan Patel',
     role: 'Front End Developer',
-    image: '/api/placeholder/400/400',
+    image: '',
     bio: 'Creative problem solver focused on building dynamic and efficient web applications.',
   },
 ];

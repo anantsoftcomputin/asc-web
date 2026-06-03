@@ -91,11 +91,13 @@ const SEOService = () => {
                 SEO Services
               </Badge>
               <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
-                Boost Your Online Visibility
+                Professional SEO Services
+                <span className="block text-2xl mt-2 font-normal text-gray-600">Rank Higher. Drive Organic Traffic. Grow Faster.</span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                Drive organic traffic and increase your search engine rankings with our 
-                data-driven SEO strategies and advanced optimization techniques.
+                Drive sustained organic traffic and dominate search engine rankings with our
+                data-driven SEO strategies — keyword research, technical SEO, on-page optimization,
+                link building, and local SEO tailored to your business goals.
               </p>
               <div className="flex gap-4">
                 <Button 

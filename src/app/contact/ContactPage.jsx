@@ -89,23 +89,23 @@ const ContactPage = () => {
       <section className="py-20 bg-gradient-to-b from-white to-gray-50">
         <Container>
           <div className="text-center mb-16">
-            <motion.h2
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl font-bold text-gray-900 mb-4 mt-4"
             >
-              Get in Touch
+              Contact AnantSoftComputing
               <span className="block text-primary text-lg font-normal mt-2">
-                We&apos;d Love to Hear from You
+                Get a Free Consultation for Your Project
               </span>
-            </motion.h2>
+            </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               className="text-gray-600 text-lg max-w-2xl mx-auto"
             >
-              Have a project in mind? Looking to partner or work with us? We&apos;d love to hear from you!
+              Have a project in mind? Looking to build custom software, CRM, a mobile app, or boost your SEO? We&apos;d love to hear from you — reach out for a free consultation.
             </motion.p>
           </div>
 

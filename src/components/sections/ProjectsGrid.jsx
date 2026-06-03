@@ -1,688 +1,466 @@
 "use client";
-// src/pages/Portfolio.jsx
+
 import { useState, useEffect } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container, Card, Badge, Button } from "../common";
-import { CTA } from "../sections";
-import { FaTimes, FaGlobe, FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { FaTimes, FaGlobe, FaGithub } from "react-icons/fa";
 import Image from "next/image";
+import { projectAPI } from "../../lib/firebase-admin";
+
+const FALLBACK_PROJECTS = [
+  {
+    id: "fp-1", title: "Pawppy.in", category: "petcare",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_12.01.45PM.webp",
+    shortDesc: "Connecting pet owners with trusted care",
+    fullDesc: "Pawppy is a platform that connects pet owners with verified pet service providers, offering bookings, vet consultations, and pet essentials.",
+    detailedDesc: "Anant Soft Computing built Pawppy.in — a two-sided marketplace that connects pet owners across India with verified, reviewed pet care professionals including sitters, walkers, groomers, and vets.",
+    technologies: ["Firebase", "JavaScript", "NodeJS"],
+    features: ["Verified Pet Care Professionals", "Geo-based Provider Search", "In-App Booking & Scheduling", "User Reviews and Ratings", "Secure Online Payments"],
+    results: ["40% faster booking engagement", "5,000+ pet owners onboarded", "99.9% platform uptime"],
+    links: { live: "https://pawppy.in", github: null },
+    stats: { users: "5,000+", bookings: "20K+", uptime: "99.9%" },
+    gradient: "from-pink-400 to-purple-600",
+    problemStatement: "Pet owners in India had no reliable platform to find verified, trustworthy pet care professionals. The market was fragmented — groomers, sitters, and vets operated independently with no central discovery platform, forcing pet owners to rely on risky word-of-mouth referrals.",
+    ourApproach: "We conducted user research across 3 major cities to map the booking behaviour of pet owners and the service delivery expectations of care professionals. We designed a two-sided marketplace with trust, verification, and ease-of-booking as its core pillars.",
+    solutionDelivered: "We built a full-stack marketplace featuring verified professional onboarding with background checks, geo-based search, a review and rating system, in-app booking with calendar sync, and Razorpay payment integration — all accessible on mobile and desktop.",
+    caseStudyOutcome: "Pawppy.in onboarded 5,000+ pet owners within 6 months of launch. Booking engagement was 40% faster compared to the manual booking process. The platform maintained 99.9% uptime and became a trusted community for pet care in Ahmedabad and Vadodara.",
+  },
+  {
+    id: "fp-2", title: "Ikama.in", category: "franchise",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_11.50.41AM.png",
+    shortDesc: "India's trusted franchise discovery platform",
+    fullDesc: "A platform that connects entrepreneurs with verified franchise opportunities through structured listings, investment filters, and direct franchisor contact.",
+    detailedDesc: "Anant Soft Computing developed Ikama.in to digitise India's franchise discovery process — bringing hundreds of franchise brands and thousands of aspiring entrepreneurs onto a single, structured platform.",
+    technologies: ["CSS", "Firebase", "HTML", "JavaScript"],
+    features: ["Curated Franchise Directory", "Investment Range Filtering", "Verified Franchisor Listings", "Lead Management for Franchisors", "Detailed Brand Profiles"],
+    results: ["2,000+ qualified leads in first quarter", "25% increase in franchisor conversion rate", "10,000+ entrepreneur registrations"],
+    links: { live: "https://ikama.in", github: null },
+    stats: { users: "10,000+", leads: "2,000+", uptime: "99.8%" },
+    gradient: "from-green-400 to-blue-500",
+    problemStatement: "India's ₹938 billion franchise industry had no centralised digital platform for discovery. Entrepreneurs seeking franchise opportunities were forced to rely on broker networks, cold calls, and expensive trade shows — a slow, opaque, and inefficient process that left both sides frustrated.",
+    ourApproach: "We mapped the entire franchise discovery journey — from an entrepreneur's first search to signing a franchise agreement — identifying friction points at every stage. We then designed a content-rich directory with SEO-optimised franchise listings, investment filters, and a CRM-integrated lead management system for franchisors.",
+    solutionDelivered: "We built a comprehensive franchise marketplace featuring advanced filtering by industry, investment level, and location; verified brand listings with ROI data; a lead capture and routing system for franchisors; and a resource centre with franchise guides and FAQs.",
+    caseStudyOutcome: "Ikama.in generated 2,000+ qualified franchise leads in its first quarter. Franchisor conversion rates improved by 25% due to better lead qualification. The platform scaled to 10,000+ registered entrepreneurs within its first year.",
+  },
+  {
+    id: "fp-3", title: "OEC CRM", category: "crm",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/oeccrm.webp",
+    shortDesc: "Custom CRM eliminating lead loss across 50+ branches",
+    fullDesc: "An enterprise-grade CRM built for OEC — a multi-branch education consultancy — to centralise leads, automate follow-ups, and gain real-time visibility across all branches.",
+    detailedDesc: "Anant Soft Computing designed and built a bespoke CRM for OEC Education, replacing a fragmented spreadsheet-and-WhatsApp workflow with a centralised, automated lead management platform serving 50+ branches simultaneously.",
+    technologies: ["ReactJs", "VueJs", "Firebase", "Node.js"],
+    features: ["Multi-Branch Lead Pipeline", "Automated Follow-Up Reminders", "Branch-Wise Performance Dashboards", "Fee Tracking & Payment Records", "Student Communication Portal", "Counsellor Activity Tracking"],
+    results: ["70% improvement in counsellor productivity", "Zero lead leakage across 50+ branches", "Centralised student records for 2,500+ active students"],
+    links: { live: null, github: null },
+    stats: { users: "2,500+", records: "200K+", uptime: "99.9%" },
+    gradient: "from-indigo-400 to-blue-700",
+    problemStatement: "OEC, a leading multi-branch education consultancy with 50+ branches across Gujarat, was managing all student inquiries and leads via WhatsApp groups and shared Excel sheets. This caused 40% lead loss, inconsistent follow-up, counsellor confusion, and zero management visibility into branch performance.",
+    ourApproach: "We mapped OEC's entire student lifecycle — from first inquiry through counselling, application, enrolment, and alumni — and designed a CRM architecture that centralised every touchpoint while allowing branch-level customisation. We ran a 2-week discovery sprint with branch managers before writing a single line of code.",
+    solutionDelivered: "We built a full-stack CRM with a real-time lead pipeline, automated follow-up reminders via WhatsApp and SMS, branch-wise performance dashboards for management, fee collection tracking, document upload for student files, and a counsellor activity log for accountability.",
+    caseStudyOutcome: "Within 3 months of deployment, OEC reported 70% improvement in counsellor productivity and zero lead leakage across all branches. The centralised database now holds records for 2,500+ active students and has become the operational backbone of OEC's expansion strategy.",
+  },
+  {
+    id: "fp-4", title: "OEC India", category: "education",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_12.58.47AM.png",
+    shortDesc: "Purpose-built LMS for coaching institutions",
+    fullDesc: "A custom learning management system developed for OEC India — enabling seamless online class delivery, attendance tracking, fee management, and student progress monitoring.",
+    detailedDesc: "Anant Soft Computing built OEC India's online education platform from scratch — a full-featured LMS designed specifically for the Indian coaching industry, not adapted from generic video conferencing tools.",
+    technologies: ["Firebase", "NodeJS", "VueJs", "WebRTC"],
+    features: ["HD Live Streaming Classes", "Recorded Session Library", "Attendance Tracking & Reports", "Assignment Submission Portal", "Fee Management System", "Multi-Branch Student Management"],
+    results: ["5,000+ students transitioned online in 3 weeks", "99.9% platform uptime during COVID peak", "35% reduction in administrative overhead"],
+    links: { live: "https://oecindia.com", github: null },
+    stats: { students: "5,000+", sessions: "50K+", uptime: "99.9%" },
+    gradient: "from-purple-400 to-indigo-600",
+    problemStatement: "During COVID-19, OEC India needed to move its in-person coaching classes online within weeks. Generic tools like Zoom lacked attendance tracking tied to student records, assignment management, fee collection, and branch-level student segmentation — all critical for structured coaching.",
+    ourApproach: "Rather than adapting an off-the-shelf tool, we built a purpose-built LMS tailored entirely to the coaching industry's workflow. We mapped every educator-student interaction and designed the architecture around the coaching lifecycle rather than a generic classroom metaphor.",
+    solutionDelivered: "We delivered a complete online education platform with HD live streaming via WebRTC, session recording with searchable transcripts, automated attendance marked via login events, an assignment submission and grading portal, a Razorpay-integrated fee management module, and multi-branch student segmentation.",
+    caseStudyOutcome: "OEC India transitioned 5,000+ students to the online platform within 3 weeks of deployment — with zero downtime throughout the COVID-19 period. Administrative overhead dropped by 35% due to automated attendance and fee tracking. The platform continues to serve students across all OEC branches.",
+  },
+  {
+    id: "fp-5", title: "Indraprasth Foundation", category: "ngo",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.04.13AM.png",
+    shortDesc: "Digital transformation for a leading social welfare NGO",
+    fullDesc: "A modern NGO website built for Indraprasth Foundation enabling online donations, volunteer registration, impact storytelling, and event management.",
+    detailedDesc: "Anant Soft Computing gave Indraprasth Foundation a fully digital presence — transforming how they collect donations, recruit volunteers, and communicate their social impact to the world.",
+    technologies: ["ReactJs", "MUI", "Firebase", "Razorpay"],
+    features: ["Online Donation Gateway with Tax Receipt", "Volunteer Registration & Onboarding Portal", "Project Impact Showcase Pages", "Event Management & Registration", "SEO-Optimised Content Architecture", "Social Media Integration"],
+    results: ["200% growth in online donations within first year", "1,200+ volunteers registered via the portal", "Top 3 search ranking for key NGO terms in Gujarat"],
+    links: { live: "https://indraprasthfoundation.org", github: null },
+    stats: { donations: "₹50L+", volunteers: "1,200+", uptime: "99.7%" },
+    gradient: "from-yellow-400 to-orange-600",
+    problemStatement: "Indraprasth Foundation — a Gujarat-based NGO focused on education, healthcare, and women's empowerment — had no digital presence. All donations were made via bank transfer with manual tracking, volunteer recruitment was word-of-mouth only, and the organisation was invisible to potential supporters searching online.",
+    ourApproach: "We focused on two primary goals: convert website visitors into donors and convert social awareness into volunteer applications. We designed an emotionally resonant digital presence that led with impact stories and made giving frictionless. We also implemented a complete SEO strategy to build organic visibility.",
+    solutionDelivered: "We built a full NGO website with an integrated Razorpay donation gateway that auto-generates 80G tax receipts, a structured volunteer registration and onboarding flow, detailed project impact pages with photo galleries and outcome metrics, an events calendar, and an admin panel for the NGO team to manage content independently.",
+    caseStudyOutcome: "Online donations grew by 200% within the first year of the new website. The volunteer portal onboarded 1,200+ registered volunteers, replacing the manual recruitment process entirely. Indraprasth Foundation now ranks in the top 3 search results for several NGO-related keywords in Gujarat.",
+  },
+  {
+    id: "fp-6", title: "SMHRI Hospital", category: "healthcare",
+    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.08.15AM.png",
+    shortDesc: "Digitising patient acquisition for a multi-specialty hospital",
+    fullDesc: "A comprehensive hospital website with online appointment booking, doctor profiles, specialty pages, and patient communication tools — built to drive patient acquisition.",
+    detailedDesc: "Anant Soft Computing transformed SMHRI Hospital's patient acquisition model by building a digital-first presence that made it easy for patients to find the right doctor, understand their specialty, and book appointments online.",
+    technologies: ["Bootstrap", "Python", "Django", "MySQL"],
+    features: ["Online Appointment Booking System", "Doctor Profiles with Specialties", "Department & Service Pages", "Patient Testimonials Section", "WhatsApp Chat Widget", "Google Maps Integration"],
+    results: ["25% reduction in appointment scheduling delays", "3x increase in online appointment bookings in 60 days", "Significant growth in new patient inquiries from search"],
+    links: { live: "https://smhri.com", github: null },
+    stats: { patients: "10,000+", appointments: "40K+", uptime: "99.9%" },
+    gradient: "from-green-500 to-emerald-700",
+    problemStatement: "SMHRI Hospital was losing prospective patients to competitors because of zero online presence. Appointment booking was phone-only, causing missed calls, scheduling conflicts, and frustrated patients. Specialist doctors had no way to showcase their qualifications or specialties to patients searching online.",
+    ourApproach: "We identified patient acquisition and appointment booking efficiency as the two primary goals. We designed the website architecture around the patient decision journey — starting from symptom search to specialist discovery, doctor evaluation, and appointment booking — rather than around the hospital's internal department structure.",
+    solutionDelivered: "We delivered a full hospital website with an online appointment booking system integrated with the hospital's scheduling workflow, individual doctor profile pages with qualifications and consultation timings, department and specialty landing pages optimised for local SEO, patient testimonials, a WhatsApp chat widget for quick queries, and Google Maps integration for navigation.",
+    caseStudyOutcome: "Within 60 days of launch, online appointment bookings grew by 3x. Appointment scheduling delays reduced by 25% as patients could now self-schedule rather than waiting for callbacks. The hospital's online visibility for local healthcare searches improved significantly, driving a consistent stream of new patient inquiries.",
+  },
+];
+
+function normalizeProject(doc) {
+  const stats = {};
+  if (doc.stat1Label && doc.stat1Value) stats[doc.stat1Label] = doc.stat1Value;
+  if (doc.stat2Label && doc.stat2Value) stats[doc.stat2Label] = doc.stat2Value;
+  if (doc.stat3Label && doc.stat3Value) stats[doc.stat3Label] = doc.stat3Value;
+  return {
+    id: doc.id,
+    title: doc.title || '',
+    category: doc.category || 'other',
+    image: doc.image || '',
+    gradient: doc.gradient || 'from-primary-400 to-primary-600',
+    shortDesc: doc.shortDesc || doc.description || '',
+    fullDesc: doc.fullDesc || doc.description || '',
+    detailedDesc: doc.detailedDesc || doc.fullDesc || '',
+    technologies: Array.isArray(doc.technologies) ? doc.technologies : [],
+    features: Array.isArray(doc.features) ? doc.features : [],
+    results: Array.isArray(doc.results) ? doc.results : [],
+    links: { live: doc.liveLink || null, github: doc.githubLink || null },
+    stats,
+    problemStatement: doc.problemStatement || '',
+    ourApproach: doc.ourApproach || '',
+    solutionDelivered: doc.solutionDelivered || '',
+    caseStudyOutcome: doc.caseStudyOutcome || '',
+    featured: doc.featured || false,
+  };
+}
 
 function ProjectImage({ src, alt, gradient, fill, className, sizes }) {
   const [errored, setErrored] = useState(false);
-  if (errored) {
-    return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
-  }
+  if (!src || errored) return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
   return (
-    <Image
-      src={src}
-      alt={alt}
-      fill={fill}
-      className={className}
-      sizes={sizes}
-      onError={() => setErrored(true)}
-    />
+    <Image src={src} alt={alt} fill={fill} className={className} sizes={sizes}
+      onError={() => setErrored(true)} unoptimized={src.startsWith('data:')} />
   );
 }
 
-const PortfolioPage = () => {
+const ALL_CATEGORIES = [
+  { id: "all", name: "All Projects", icon: "🌟" },
+  { id: "healthcare", name: "Healthcare", icon: "🏥" },
+  { id: "education", name: "Education", icon: "🎓" },
+  { id: "ngo", name: "Non-Profit", icon: "🤝" },
+  { id: "enterprise", name: "Enterprise", icon: "🏢" },
+  { id: "crm", name: "CRM", icon: "📊" },
+  { id: "franchise", name: "Franchise", icon: "🏪" },
+  { id: "petcare", name: "Pet Care", icon: "🐾" },
+  { id: "mobile", name: "Mobile Apps", icon: "📱" },
+  { id: "web", name: "Web", icon: "🌐" },
+];
+
+const CaseStudySection = ({ project }) => {
+  if (!project.problemStatement && !project.ourApproach && !project.solutionDelivered && !project.caseStudyOutcome) return null;
+  return (
+    <div className="space-y-6">
+      <h3 className="text-xl font-semibold text-gray-900 border-b pb-2">📋 Case Study</h3>
+      {project.problemStatement && (
+        <div className="bg-red-50 border border-red-100 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-red-700 uppercase tracking-wide mb-2">🔴 The Challenge</h4>
+          <p className="text-gray-700 leading-relaxed">{project.problemStatement}</p>
+        </div>
+      )}
+      {project.ourApproach && (
+        <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-yellow-700 uppercase tracking-wide mb-2">🟡 Our Approach</h4>
+          <p className="text-gray-700 leading-relaxed">{project.ourApproach}</p>
+        </div>
+      )}
+      {project.solutionDelivered && (
+        <div className="bg-green-50 border border-green-100 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-green-700 uppercase tracking-wide mb-2">🟢 The Solution</h4>
+          <p className="text-gray-700 leading-relaxed">{project.solutionDelivered}</p>
+        </div>
+      )}
+      {project.caseStudyOutcome && (
+        <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-2">📈 Business Impact</h4>
+          <p className="text-gray-700 leading-relaxed">{project.caseStudyOutcome}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function PortfolioGrid() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
-  const { scrollY } = useScroll();
-  const backgroundY = useTransform(scrollY, [0, 500], [0, 150]);
+  const [modalTab, setModalTab] = useState('overview');
+  const [projects, setProjects] = useState(FALLBACK_PROJECTS);
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { id: "all", name: "All Projects", icon: "🌟" },
-    { id: "healthcare", name: "Healthcare", icon: "🏥" },
-    { id: "education", name: "Education", icon: "🎓" },
-    { id: "non-profit", name: "Non-Profit", icon: "🤝" },
-    { id: "enterprise", name: "Enterprise", icon: "🏢" },
-  ];
+  useEffect(() => {
+    projectAPI.getAll().then(result => {
+      if (result.success && result.data.length > 0) {
+        setProjects(result.data.map(normalizeProject));
+      }
+      setLoading(false);
+    });
+  }, []);
 
-  const projects = [
-    {
-      id: 1,
-      title: "Pawppy.in",
-      category: "petcare",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_12.01.45PM.webp",
-      shortDesc: "Connecting pet owners with trusted care",
-      fullDesc:
-        "Pawppy is a platform that connects pet owners with verified pet service providers, offering bookings, vet consultations, and pet essentials.",
-      detailedDesc: "Anant Soft Computing is delighted to feature Pawppy.in, a dedicated online marketplace designed to connect pet owners with a network of reliable and passionate pet care professionals. Understanding the need for trustworthy care, Pawppy.in provides a seamless platform for finding local pet sitters, dog walkers, groomers, and boarding facilities. Our mission is to make pet care simple, safe, and accessible. The platform allows users to browse detailed profiles of service providers, read genuine reviews from other pet owners, and book services with confidence. By creating a community built on trust and a love for animals, Pawppy.in ensures that every pet receives the best possible care, giving owners peace of mind whether they are at work or on vacation.",
-      technologies: ["Firebase", "JavaScript", "NodeJS"],
-      features: [
-        "Verified Pet Care Professionals: Search a curated directory of local, reviewed, and trusted individuals and businesses.",
-        "Comprehensive Service Listings: Easily find a wide range of services, including dog walking, in-home pet sitting, grooming, and overnight boarding.",
-        "Detailed Provider Profiles: View photos, services offered, experience, and rates to find the perfect match for your pet's needs.",
-        "User Reviews and Ratings: Make informed decisions by reading authentic feedback from a community of fellow pet lovers.",
-        "Simple and Secure Booking: A user-friendly interface allows for easy scheduling and secure online payments."
-      ],
-      results: [
-        "40% faster booking engagement",
-        "Trusted by 5,000+ pet owners",
-      ],
-      links: {
-        live: "https://pawppy.in",
-        github: null,
-        case_study: "/case-study/pawppy",
-      },
-      stats: { users: "5,000+", bookings: "20K+", uptime: "99.9%" },
-      gradient: "from-pink-400 to-purple-600",
-    },
-    {
-      id: 2,
-      title: "Ikama.in",
-      category: "franchise",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_11.50.41AM.png",
-      shortDesc: "Your gateway to franchise opportunities",
-      fullDesc:
-        "A platform that connects entrepreneurs with franchise chains through verified listings, AI-based matching, and lead management.",
-      detailedDesc: "Anant Soft Computing is proud to present ikama.in, a premier online platform dedicated to connecting aspiring entrepreneurs with the perfect franchise opportunities. Ikama.in serves as a comprehensive directory, showcasing a wide array of franchise options across various industries, from food and beverage to retail and services. Our platform is designed to simplify the process of finding and securing a franchise. We provide detailed information on each listing, including investment requirements, brand history, and support systems, empowering users to make informed decisions. Whether you're a seasoned business owner looking to expand your portfolio or a first-time entrepreneur ready to take the leap, ikama.in is your trusted partner in the world of franchising. Key Features: Extensive Franchise Directory: Explore a diverse range of franchise opportunities to find the ideal match for your goals and budget. Detailed Business Information: Access comprehensive details about each franchise, including investment levels, fees, and training programs. User-Friendly Search and Filtering: Easily navigate our platform and filter listings by industry, investment, and location. Direct Connection with Franchisors: Connect directly with franchise representatives to ask questions and take the next steps. Valuable Resources for Entrepreneurs: Find helpful articles and guides on franchising to support you on your journey.",
-      technologies: ["CSS", "Firebase", "HTML"],
-      features: [
-        "Extensive Franchise Directory: Explore a diverse range of franchise opportunities to find the ideal match for your goals and budget.",
-        "Detailed Business Information: Access comprehensive details about each franchise, including investment levels, fees, and training programs.",
-        "User-Friendly Search and Filtering: Easily navigate our platform and filter listings by industry, investment, and location.",
-        "Direct Connection with Franchisors: Connect directly with franchise representatives to ask questions and take the next steps.",
-        "Valuable Resources for Entrepreneurs: Find helpful articles and guides on franchising to support you on your journey."
-      ],
-      results: ["Generated 2,000+ leads", "25% increase in conversion rate"],
-      links: {
-        live: "https://ikama.in",
-        github: null,
-        case_study: "/case-study/ikama",
-      },
-      stats: { users: "10,000+", leads: "2,000+", uptime: "99.8%" },
-      gradient: "from-green-400 to-blue-500",
-    },
-    {
-      id: 3,
-      title: "OEC CRM",
-      category: "crm",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/oeccrm.webp",
-      shortDesc: "Optimizing customer relationships with OEC CRM.",
-      fullDesc:
-        "An enterprise CRM built for OEC to manage leads, students, fees, counseling, and communication — fully real-time and secure.",
-      detailedDesc: "OEC CRM provides a powerful platform for managing customer interactions, streamlining sales processes, and enhancing customer satisfaction. With advanced features and intuitive tools, it helps businesses strengthen relationships and drive success.",
-      technologies: ["ReactJs", "VueJs"],
-      features: [
-        "Customer Interaction Management",
-        "Advanced Analytics",
-        "Customizable Workflows",
-        "Mobile Accessibility",
-        "Secure Data Handling"
-      ],
-      results: [
-        "70% faster team productivity",
-        "Centralized student management for 50+ branches",
-      ],
-      links: {
-        live: null,
-        github: null,
-        case_study: "/case-study/oec-crm",
-      },
-      stats: { users: "2,500+", records: "200K+", uptime: "99.9%" },
-      gradient: "from-indigo-400 to-blue-700",
-    },
-    {
-      id: 4,
-      title: "OEC India",
-      category: "education",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_12.58.47AM.png",
-      shortDesc: "Real-time virtual classroom for remote learning",
-      fullDesc:
-        "A platform providing virtual classroom experiences with live classes and collaborative tools.",
-      detailedDesc: "A platform providing virtual classroom experiences with live classes and collaborative tools.",
-      technologies: ["Firebase", "NodeJS", "VueJs"],
-      features: [
-        "Interactive Live Classes",
-        "Recorded Sessions",
-        "Assignment Management",
-        "Teacher and Student Dashboards",
-        "Multi-Device Support",
-        "Secure and Scalable"
-      ],
-      results: ["Used by 5,000+ active learners", "Enhanced class engagement"],
-      links: {
-        live: "https://oecindia.com",
-        github: null,
-        case_study: "/case-study/oecindia",
-      },
-      stats: { users: "5,000+", sessions: "50K+", uptime: "99.9%" },
-      gradient: "from-purple-400 to-indigo-600",
-    },
-    {
-      id: 5,
-      title: "Espionline",
-      category: "education",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.00.14AM.png",
-      shortDesc: "Real-time virtual classroom for remote learning",
-      fullDesc:
-        "A scalable online classroom system supporting HD live classes, notes, student tracking, and fee management.",
-      detailedDesc: "A platform providing virtual classroom experiences with live classes and collaborative tools.",
-      technologies: ["Firebase", "NodeJS", "VueJs"],
-      features: ["Interactive Live Classes", "Recorded Sessions", "Attendance Tracking", "Assignment Management", "Customizable Scheduling", "Integration with Learning Management Systems"],
-      results: [
-        "Reduced operational cost by 35%",
-        "Trusted by multiple institutions",
-      ],
-      links: {
-        live: null,
-        github: null,
-        case_study: "/case-study/espionline",
-      },
-      stats: { users: "3,500+", classes: "30K+", uptime: "99.8%" },
-      gradient: "from-red-400 to-pink-600",
-    },
-    {
-      id: 6,
-      title: "Indraprasth Foundation",
-      category: "ngo",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.04.13AM.png",
-      shortDesc: "Empowering communities through Indraprasth Foundation.",
-      fullDesc:
-        "A modern NGO website built for showcasing projects, collecting donations, and enabling volunteer applications.",
-      detailedDesc: "Indraprasth Foundation is dedicated to social welfare, focusing on empowering underprivileged communities through education, healthcare, and skill development. With a mission to foster sustainable growth, it strives to create lasting positive change.",
-      technologies: ["MUI", "ReactJs"],
-      features: ["Education Initiatives", "Healthcare Programs", "Skill Development Training",
-        "Women Empowerment Projects", "Community Infrastructure Development", "Volunteer Engagement" 
-      ],
-      results: [
-        "200% growth in online donations",
-        "Automated volunteer workflow",
-      ],
-      links: {
-        live: "https://indraprasthfoundation.org",
-        github: null,
-        case_study: "/case-study/indraprasth",
-      },
-      stats: { donations: "₹50L+", volunteers: "1,200+", uptime: "99.7%" },
-      gradient: "from-yellow-400 to-orange-600",
-    },
-    {
-      id: 7,
-      title: "Edustation",
-      category: "education",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.06.06AM.png",
-      shortDesc: "Empowering education through innovative solutions.",
-      fullDesc:
-        "A platform built for schools to manage students, attendance, fees, and study materials with responsive dashboards.",
-      detailedDesc: "Edustation offers cutting-edge educational tools and platforms to enhance learning experiences. Focused on student success, it provides personalized learning, resources, and support to help achieve academic goals.",
-      technologies: ["Bootstrap", "PHP"],
-      features: ["Personalized Learning Paths", "Interactive Learning Tools", "Comprehensive Resource Library", "Progress Tracking and Analytics", "Adaptive Assessments:", "24/7 Support and Guidance"],
-      results: ["Digital transformation for 12+ institutes"],
-      links: {
-        live: null,
-        github: null,
-        case_study: "/case-study/edustation",
-      },
-      stats: { users: "1,800+", materials: "8K+", uptime: "99.5%" },
-      gradient: "from-blue-400 to-blue-600",
-    },
-    {
-      id: 8,
-      title: "SMHRI",
-      category: "healthcare",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.08.15AM.png",
-      shortDesc: "Quality healthcare services at SMHRI Hospital.",
-      fullDesc:
-        "Hospital website and management system built with appointment booking, doctor profiles, and patient communication.",
-      detailedDesc: "SMHRI Hospital is committed to delivering high-quality healthcare with advanced medical facilities and compassionate care. Focused on patient well-being, SMHRI offers a range of specialized treatments and expert services.",
-      technologies: ["Bootstrap", "Python"],
-      features: ["Advanced Medical Facilities", "Specialized Treatment Services", "Patient-Centered Care", "Emergency and Critical Care", "Preventive Healthcare Programs", "Health Education and Awareness", "Digital Health Records", "Affordable and Transparent Billing"],
-      results: ["25% reduction in appointment delays"],
-      links: {
-        live: "https://smhri.com",
-        github: null,
-        case_study: "/case-study/smhri",
-      },
-      stats: { patients: "10,000+", appointments: "40K+", uptime: "99.9%" },
-      gradient: "from-green-500 to-emerald-700",
-    },
-    {
-      id: 9,
-      title: "ESPI CRM",
-      category: "crm",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.10.34AM.png",
-      shortDesc: "Streamlined customer management with ESPI CRM.",
-      fullDesc:
-        "A CRM for ESPI handling leads, inquiries, student management, task workflows, and communication automation.",
-      detailedDesc: "ESPI CRM offers a comprehensive solution for managing customer relationships, enhancing productivity, and streamlining sales processes. With intuitive tools and data insights, it helps businesses build stronger customer connections and drive growth.",
-      technologies: ["Django", "Python"],
-      features: ["Customer Relationship Management", "Sales Pipeline Management", "Advanced Analytics and Reporting", "Task and Activity Management", "Omnichannel Support"],
-      results: ["65% faster lead response time"],
-      links: {
-        live: null,
-        github: null,
-        case_study: "/case-study/espi-crm",
-      },
-      stats: { users: "1200+", leads: "150K+", uptime: "99.8%" },
-      gradient: "from-purple-500 to-purple-700",
-    },
-    {
-      id: 10,
-      title: "StudyStreak",
-      category: "education",
-      image:
-        "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.12.27AM.png",
-      shortDesc: "Achieve academic goals with Studystreak.",
-      fullDesc:
-        "An AI-powered study planning and analytics platform for students to track progress, join live classes, and access resources.",
-      detailedDesc: "Studystreak is your partner in achieving academic success through consistent study habits and progress tracking. With personalized plans and motivational tools, Studystreak helps you stay focused, reach milestones, and build lasting study routines.",
-      technologies: ["NodeJS", "Python", "ReactJs"],
-      features: ["Personalized Study Plans", "Progress Tracking and Milestones", "Goal Setting and Achievement Reminders", "Task Management", "Study Analytics", "Resource Integration", "Study Reflection"],
-      results: ["Used by 3,000+ students", "30% increase in study consistency"],
-      links: {
-        live: "https://studystreak.com",
-        github: null,
-        case_study: "/case-study/studystreak",
-      },
-      stats: { students: "3,000+", progress_reports: "40K+", uptime: "99.9%" },
-      gradient: "from-cyan-400 to-blue-600",
-    },
-  ];
+  const openProject = (project) => { setSelectedProject(project); setModalTab('overview'); };
+  const closeProject = () => setSelectedProject(null);
 
-  const filteredProjects =
-    selectedCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
+  const activeCategories = ALL_CATEGORIES.filter(
+    cat => cat.id === "all" || projects.some(p => p.category === cat.id)
+  );
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen"
-    >
-      {/* Hero Section with Parallax */}
+  const filteredProjects = selectedCategory === "all"
+    ? projects
+    : projects.filter(p => p.category === selectedCategory);
 
-      {/* Portfolio Content */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+  if (loading) {
+    return (
+      <section className="py-20">
         <Container>
-          {/* Category Filter */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-4 mb-16"
-          >
-            {categories.map((category) => (
-              <motion.button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`
-                  px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300
-                  flex items-center gap-2 backdrop-blur-sm
-                  ${
-                    selectedCategory === category.id
-                      ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25"
-                      : "bg-white/80 text-gray-600 hover:bg-primary-50 hover:text-primary-600 border border-gray-100"
-                  }
-                `}
-              >
-                <span className="text-lg">{category.icon}</span>
-                {category.name}
-              </motion.button>
-            ))}
-          </motion.div>
-
-          {/* Projects Grid */}
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="group"
-                >
-                  <Card
-                    className="h-full overflow-hidden bg-white/80 backdrop-blur-sm
-                             hover:shadow-2xl hover:shadow-primary-200/20 transition-all duration-500
-                             border border-gray-100 hover:border-primary-200"
-                    onClick={() => setSelectedProject(project)}
-                  >
-                    <div className="relative overflow-hidden">
-                      <div className="relative h-56 w-full">
-                        <ProjectImage
-                          src={project.image}
-                          alt={project.title}
-                          gradient={project.gradient}
-                          fill
-                          className="object-cover transform group-hover:scale-110 transition-transform duration-700"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="flex flex-wrap gap-2">
-                            {project.technologies.slice(0, 3).map((tech) => (
-                              <Badge
-                                key={tech}
-                                variant="primary"
-                                className={`bg-gradient-to-r ${project.gradient} text-white`}
-                              >
-                                {tech}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-3">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-600 mb-4">{project.shortDesc}</p>
-                      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                        <div className="flex gap-4">
-                          {project.stats &&
-                            Object.entries(project.stats).map(
-                              ([key, value]) => (
-                                <div key={key} className="text-center">
-                                  <div className="text-primary-600 font-semibold">
-                                    {value}
-                                  </div>
-                                  <div className="text-xs text-gray-500 capitalize">
-                                    {key}
-                                  </div>
-                                </div>
-                              )
-                            )}
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600"
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" />
+          </div>
         </Container>
       </section>
+    );
+  }
 
-      {/* Project Details Modal */}
+  return (
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <Container>
+        {/* Category Filter */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="flex flex-wrap justify-center gap-3 mb-16">
+          {activeCategories.map(cat => (
+            <motion.button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 backdrop-blur-sm
+                ${selectedCategory === cat.id
+                  ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg"
+                  : "bg-white/80 text-gray-600 hover:bg-primary-50 hover:text-primary-600 border border-gray-100"}`}>
+              <span>{cat.icon}</span>{cat.name}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Grid */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
+              <motion.div key={project.id} layout
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }} className="group">
+                <Card className="h-full overflow-hidden bg-white/80 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary-200/20 transition-all duration-500 border border-gray-100 hover:border-primary-200 cursor-pointer"
+                  onClick={() => openProject(project)}>
+                  <div className="relative overflow-hidden">
+                    <div className="relative h-56 w-full">
+                      <ProjectImage src={project.image} alt={project.title} gradient={project.gradient} fill
+                        className="object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+                        {project.technologies.slice(0, 3).map(tech => (
+                          <Badge key={tech} variant="primary" className={`bg-gradient-to-r ${project.gradient} text-white`}>{tech}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    {(project.problemStatement || project.ourApproach) && (
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs px-2 py-1 rounded-full text-gray-600 font-medium">
+                        📋 Case Study
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-2">{project.title}</h3>
+                    <p className="text-gray-600 mb-4 text-sm">{project.shortDesc}</p>
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                      <div className="flex gap-4">
+                        {Object.entries(project.stats || {}).slice(0, 2).map(([key, value]) => (
+                          <div key={key} className="text-center">
+                            <div className="text-primary-600 font-semibold text-sm">{value}</div>
+                            <div className="text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <Button variant="outline" size="sm" className="group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600">
+                        View Details
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {filteredProjects.length === 0 && (
+          <p className="text-center py-20 text-gray-500">No projects in this category yet.</p>
+        )}
+      </Container>
+
+      {/* Project Modal */}
       <AnimatePresence>
         {selectedProject && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-              onClick={() => setSelectedProject(null)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="fixed inset-10 z-50 overflow-hidden rounded-2xl bg-white"
-              style={{ maxWidth: "1200px", margin: "auto" }}
-            >
-              <div className="h-full flex flex-col">
-                {/* Modal Header */}
-                <div className="relative h-72">
-                  <ProjectImage
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    gradient={selectedProject.gradient}
-                    fill
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                    <Container className="h-full flex flex-col justify-end pb-6">
-                      <h2 className="text-3xl font-bold text-white mb-2">
-                        {selectedProject.title}
-                      </h2>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedProject.technologies.map((tech) => (
-                          <Badge
-                            key={tech}
-                            variant="primary"
-                            className={`bg-gradient-to-r ${selectedProject.gradient} text-white`}
-                          >
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    </Container>
-                  </div>
-                  <button
-                    onClick={() => setSelectedProject(null)}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
-                  >
-                    <FaTimes className="w-6 h-6" />
-                  </button>
-                </div>
-
-                {/* Modal Content */}
-                <div className="flex-1 overflow-auto">
-                  <Container className="py-8">
-                    <div className="grid md:grid-cols-3 gap-8">
-                      <div className="md:col-span-2 space-y-6">
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                            Overview
-                          </h3>
-                          <p className="text-gray-600">
-                            {selectedProject.shortDesc}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                            Detailed Description
-                          </h3>
-                          <p className="text-gray-600">
-                            {selectedProject.detailedDesc}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                            Key Features
-                          </h3>
-                          <ul className="space-y-3">
-                            {selectedProject.features.map((feature) => (
-                              <li
-                                key={feature}
-                                className="flex items-start gap-3"
-                              >
-                                <span className="mt-1 w-5 h-5 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center">
-                                  <svg
-                                    className="w-3 h-3"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                </span>
-                                <span className="text-gray-600">{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                            Results & Impact
-                          </h3>
-                          <ul className="space-y-3">
-                            {selectedProject.results.map((result) => (
-                              <li
-                                key={result}
-                                className="flex items-start gap-3"
-                              >
-                                <span className="mt-1 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                                  <svg
-                                    className="w-3 h-3"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                                    />
-                                  </svg>
-                                </span>
-                                <span className="text-gray-600">{result}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="space-y-6">
-                        <Card className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                            Project Links
-                          </h3>
-                          <div className="space-y-3">
-                            {Object.entries(selectedProject.links)
-                              .filter(([, url]) => url !== null)
-                              .map(([key, url]) => (
-                                <a
-                                  key={key}
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-3 text-gray-600 hover:text-primary-600 transition-colors"
-                                >
-                                  {key === "live" && (
-                                    <FaGlobe className="w-5 h-5" />
-                                  )}
-                                  {key === "github" && (
-                                    <FaGithub className="w-5 h-5" />
-                                  )}
-                                  {key === "case_study" && (
-                                    <FaExternalLinkAlt className="w-5 h-5" />
-                                  )}
-                                  <span className="capitalize">
-                                    {key.replace("_", " ")}
-                                  </span>
-                                </a>
-                              ))}
-                          </div>
-                        </Card>
-
-                        <Card className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                            Technology Stack
-                          </h3>
-                          <div className="space-y-3">
-                            {selectedProject.technologies.map((tech) => (
-                              <div
-                                key={tech}
-                                className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                              >
-                                <span className="text-gray-600">{tech}</span>
-                                <span className="w-2 h-2 rounded-full bg-primary-500"></span>
-                              </div>
-                            ))}
-                          </div>
-                        </Card>
-
-                        <Card className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                            Project Stats
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            {Object.entries(selectedProject.stats).map(
-                              ([key, value]) => (
-                                <div
-                                  key={key}
-                                  className="p-4 rounded-lg bg-gray-50 text-center"
-                                >
-                                  <div className="text-2xl font-bold text-primary-600">
-                                    {value}
-                                  </div>
-                                  <div className="text-sm text-gray-600 capitalize">
-                                    {key.replace("_", " ")}
-                                  </div>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </Card>
-
-                        <div className="flex gap-4">
-                          {selectedProject.links.live && (
-                            <Button
-                              variant="primary"
-                              className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
-                              onClick={() =>
-                                window.open(selectedProject.links.live, "_blank")
-                              }
-                            >
-                              <FaGlobe className="mr-2" />
-                              View Live
-                            </Button>
-                          )}
-                          {selectedProject.links.case_study && (
-                            <Button
-                              variant="outline"
-                              className="flex-1"
-                              onClick={() =>
-                                window.open(
-                                  selectedProject.links.case_study,
-                                  "_blank"
-                                )
-                              }
-                            >
-                              <FaExternalLinkAlt className="mr-2" />
-                              Case Study
-                            </Button>
-                          )}
-                        </div>
-                      </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={closeProject} />
+            <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed inset-4 md:inset-10 z-50 overflow-hidden rounded-2xl bg-white flex flex-col"
+              style={{ maxWidth: "1100px", margin: "auto" }}>
+              {/* Header Image */}
+              <div className="relative h-56 shrink-0">
+                <ProjectImage src={selectedProject.image} alt={selectedProject.title} gradient={selectedProject.gradient}
+                  fill className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                  <Container className="h-full flex flex-col justify-end pb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedProject.title}</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.technologies.map(tech => (
+                        <Badge key={tech} variant="primary" className={`bg-gradient-to-r ${selectedProject.gradient} text-white`}>{tech}</Badge>
+                      ))}
                     </div>
                   </Container>
                 </div>
+                <button onClick={closeProject} className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30">
+                  <FaTimes className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Tabs */}
+              {(selectedProject.problemStatement || selectedProject.ourApproach) && (
+                <div className="flex border-b px-6 shrink-0 bg-white">
+                  {[{ id: 'overview', label: 'Overview' }, { id: 'casestudy', label: '📋 Case Study' }].map(tab => (
+                    <button key={tab.id} onClick={() => setModalTab(tab.id)}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        modalTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}>
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="flex-1 overflow-auto">
+                <Container className="py-6">
+                  {modalTab === 'overview' ? (
+                    <div className="grid md:grid-cols-3 gap-8">
+                      <div className="md:col-span-2 space-y-5">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">Overview</h3>
+                          <p className="text-gray-600">{selectedProject.fullDesc}</p>
+                        </div>
+                        {selectedProject.detailedDesc && (
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">About This Project</h3>
+                            <p className="text-gray-600">{selectedProject.detailedDesc}</p>
+                          </div>
+                        )}
+                        {selectedProject.features?.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Features</h3>
+                            <ul className="space-y-2">
+                              {selectedProject.features.map(f => (
+                                <li key={f} className="flex items-start gap-3">
+                                  <span className="mt-0.5 w-5 h-5 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                  </span>
+                                  <span className="text-gray-600 text-sm">{f}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {selectedProject.results?.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">Results & Impact</h3>
+                            <ul className="space-y-2">
+                              {selectedProject.results.map(r => (
+                                <li key={r} className="flex items-start gap-3">
+                                  <span className="mt-0.5 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                                  </span>
+                                  <span className="text-gray-600 text-sm">{r}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-4">
+                        {(selectedProject.links?.live || selectedProject.links?.github) && (
+                          <Card className="p-5">
+                            <h3 className="text-base font-semibold text-gray-900 mb-3">Project Links</h3>
+                            <div className="space-y-3">
+                              {selectedProject.links.live && (
+                                <a href={selectedProject.links.live} target="_blank" rel="noopener noreferrer"
+                                  className="flex items-center gap-3 text-gray-600 hover:text-primary-600 transition-colors text-sm">
+                                  <FaGlobe className="w-4 h-4" /> View Live Site
+                                </a>
+                              )}
+                              {selectedProject.links.github && (
+                                <a href={selectedProject.links.github} target="_blank" rel="noopener noreferrer"
+                                  className="flex items-center gap-3 text-gray-600 hover:text-primary-600 transition-colors text-sm">
+                                  <FaGithub className="w-4 h-4" /> View on GitHub
+                                </a>
+                              )}
+                            </div>
+                          </Card>
+                        )}
+                        {selectedProject.technologies.length > 0 && (
+                          <Card className="p-5">
+                            <h3 className="text-base font-semibold text-gray-900 mb-3">Tech Stack</h3>
+                            <div className="space-y-2">
+                              {selectedProject.technologies.map(tech => (
+                                <div key={tech} className="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                                  <span className="text-gray-600 text-sm">{tech}</span>
+                                  <span className="w-2 h-2 rounded-full bg-primary-500" />
+                                </div>
+                              ))}
+                            </div>
+                          </Card>
+                        )}
+                        {Object.keys(selectedProject.stats || {}).length > 0 && (
+                          <Card className="p-5">
+                            <h3 className="text-base font-semibold text-gray-900 mb-3">Project Stats</h3>
+                            <div className="grid grid-cols-2 gap-2">
+                              {Object.entries(selectedProject.stats).map(([key, value]) => (
+                                <div key={key} className="p-3 rounded-lg bg-gray-50 text-center">
+                                  <div className="text-lg font-bold text-primary-600">{value}</div>
+                                  <div className="text-xs text-gray-600 capitalize mt-0.5">{key.replace(/_/g, ' ')}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </Card>
+                        )}
+                        {selectedProject.links?.live && (
+                          <Button variant="primary" className="w-full"
+                            onClick={() => window.open(selectedProject.links.live, "_blank")}>
+                            <FaGlobe className="mr-2" /> View Live Site
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="max-w-3xl">
+                      <CaseStudySection project={selectedProject} />
+                    </div>
+                  )}
+                </Container>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
-      {/* Stats Section */}
-
-      {/* Enhanced CTA Section */}
-    </motion.div>
+    </section>
   );
-};
-
-export default PortfolioPage;
+}
