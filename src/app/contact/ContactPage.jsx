@@ -2,8 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Container, Input, Button, Card } from '../../components/common';
-
-const API_ENDPOINT = 'https://anantsoftcomputing.com/asc/api/contact/enquiries/';
+import { contactAPI } from '../../lib/firebase-admin';
 
 const ContactPage = () => {
   const [formState, setFormState] = useState({
@@ -41,24 +40,9 @@ const ContactPage = () => {
         message: formState.message
       };
 
-      const res = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        let errText = 'Something went wrong. Please try again.';
-        try {
-          const errJson = await res.json();
-          if (errJson.detail) errText = errJson.detail;
-          else if (errJson.message) errText = errJson.message;
-          else if (typeof errJson === 'string') errText = errJson;
-        } catch (_e) {}
-        throw new Error(errText);
+      const result = await contactAPI.create(payload);
+      if (!result.success) {
+        throw new Error(result.error || 'Something went wrong. Please try again.');
       }
 
       setSuccessMessage('Thanks — your message has been sent. We will get back to you shortly.');
