@@ -108,21 +108,25 @@ const Navbar = () => {
     <nav
       className={`
         fixed w-full z-50 transition-all duration-300
-        ${scrolled ? 'bg-white/80 backdrop-blur-lg shadow-lg shadow-gray-200/20' : 'bg-transparent'}
+        ${scrolled ? 'bg-white/90 backdrop-blur-lg shadow-lg shadow-gray-200/20' : 'bg-white/95 md:bg-transparent'}
       `}
     >
       <Container className="relative">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center gap-2">
+          <Link href="/" className="flex min-w-0 flex-shrink-0 items-center gap-2">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-gradient-to-r from-primary-400 to-primary-600 text-white px-4 py-2 rounded-xl"
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white shadow-sm md:h-auto md:w-auto md:px-4 md:py-2"
             >
-              <span className="text-2xl font-bold">Anant</span>
+              <span className="text-base font-bold md:text-2xl">
+                <span className="md:hidden">A</span>
+                <span className="hidden md:inline">Anant</span>
+              </span>
             </motion.div>
-            <span className="text-2xl font-light bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-gray-900">
-              Soft Computing
+            <span className="truncate text-lg font-semibold tracking-tight text-gray-950 md:text-2xl md:font-light md:bg-gradient-to-r md:from-gray-600 md:to-gray-900 md:bg-clip-text md:text-transparent">
+              <span className="sm:hidden">AnantSoft</span>
+              <span className="hidden sm:inline">Soft Computing</span>
             </span>
           </Link>
 
@@ -137,7 +141,7 @@ const Navbar = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:text-primary-600 hover:bg-primary-50"
+            className="md:hidden flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm active:scale-95"
             aria-label="Toggle menu"
           >
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +162,7 @@ const Navbar = () => {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-100 mt-4 overflow-hidden"
+              className="md:hidden mt-3 overflow-hidden rounded-2xl border border-gray-100 bg-white/95 shadow-2xl shadow-gray-900/10 backdrop-blur-lg"
             >
               <div className="p-4 space-y-2">
                 {navItems.map((item) => (
@@ -167,7 +171,7 @@ const Navbar = () => {
                     href={item.path}
                     onClick={() => setIsOpen(false)}
                     className={`
-                      block px-4 py-2 rounded-lg text-base font-medium 
+                      block min-h-12 px-4 py-3 rounded-xl text-base font-medium 
                       transition-all duration-300
                       ${pathname === item.path
                         ? 'bg-primary-50 text-primary-600'

@@ -102,8 +102,8 @@ export default function BlogPostClient({ post }) {
         <div className="absolute top-0 right-0 w-96 h-96 bg-secondary-200/10 rounded-full filter blur-3xl transform translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-200/10 rounded-full filter blur-3xl transform -translate-x-1/2 translate-y-1/2" />
 
-        <div className="container mx-auto px-4 pt-8 pb-16">
-          <button onClick={() => router.back()} className="group flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors mb-12">
+        <div className="container mx-auto px-4 pt-6 pb-10 md:pt-8 md:pb-16">
+          <button onClick={() => router.back()} className="group mb-8 flex items-center gap-2 text-primary-600 transition-colors hover:text-primary-700 md:mb-12">
             <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
             <span className="font-medium">Back to Articles</span>
           </button>
@@ -117,9 +117,9 @@ export default function BlogPostClient({ post }) {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-dark mb-4 leading-tight">{post.title}</h1>
-            <p className="text-xl text-dark-light mb-8">{post.excerpt.substring(0, 150)}...</p>
+            <p className="text-lg text-dark-light mb-8 md:text-xl">{post.excerpt.substring(0, 150)}...</p>
 
-            <div className="flex flex-wrap items-center gap-8 mb-12">
+            <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center md:mb-12 md:gap-8">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <AuthorAvatar author={post.author} className="w-12 h-12 rounded-full ring-2 ring-white" />
@@ -133,28 +133,28 @@ export default function BlogPostClient({ post }) {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-6 text-sm text-dark-light">
+              <div className="flex flex-col gap-3 text-sm text-dark-light sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
                 <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{post.publishedAt}</span>
                 <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{post.readTime}</span>
               </div>
             </div>
 
-            <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} src={post.thumbnail} alt={post.title} className="w-full aspect-[16/9] object-cover rounded-2xl shadow-xl mb-12" />
+            <motion.img initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} src={post.thumbnail} alt={post.title} className="mb-8 aspect-[16/9] w-full rounded-xl object-cover shadow-xl md:mb-12 md:rounded-2xl" />
           </motion.div>
         </div>
       </header>
 
       {/* Main */}
       <main className="relative">
-        <div className="container mx-auto px-4 py-12">
-          <div className="flex gap-12">
-            <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 p-8 mb-12">
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+            <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mx-auto w-full max-w-3xl">
+              <div className="mb-8 rounded-2xl bg-white p-5 shadow-sm transition-shadow duration-300 hover:shadow-md md:mb-12 md:p-8">
                 <div className="prose prose-lg prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: mockContent }} />
               </div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-start gap-6">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-2xl bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-5 shadow-sm transition-shadow duration-300 hover:shadow-md md:p-8">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
                   <AuthorAvatar author={post.author} className="w-16 h-16 rounded-full ring-4 ring-white shadow-md" />
                   <div>
                     <h3 className="text-xl font-bold text-dark mb-2">About {post.author.name}</h3>
@@ -173,7 +173,7 @@ export default function BlogPostClient({ post }) {
       {/* Scroll to Top */}
       <AnimatePresence>
         {showScrollTop && (
-          <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-8 right-8 p-4 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 hover:shadow-xl transition-all duration-300 z-50">
+          <motion.button initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-50 rounded-full bg-primary-600 p-4 text-white shadow-lg transition-all duration-300 hover:bg-primary-700 hover:shadow-xl md:bottom-8 md:right-8">
             <ArrowUp className="w-6 h-6" />
           </motion.button>
         )}

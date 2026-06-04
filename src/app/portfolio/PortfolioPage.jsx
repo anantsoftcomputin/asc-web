@@ -287,7 +287,7 @@ const PortfolioPage = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       {/* Hero */}
-      <section className="relative py-24 bg-gradient-to-b from-primary-100 via-white to-secondary-100 overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary-100 via-white to-secondary-100 py-16 md:py-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 -left-4 w-96 h-96 bg-primary-200/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
           <div className="absolute -top-4 -right-4 w-96 h-96 bg-secondary-200/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
@@ -312,7 +312,7 @@ const PortfolioPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-4 mb-16"
+            className="mb-10 flex gap-3 overflow-x-auto pb-2 md:mb-16 md:flex-wrap md:justify-center md:overflow-visible md:pb-0 md:gap-4"
           >
             {activeCategories.map((category) => (
               <motion.button
@@ -321,8 +321,7 @@ const PortfolioPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`
-                  px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300
-                  flex items-center gap-2 backdrop-blur-sm
+                  flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 backdrop-blur-sm md:px-6
                   ${selectedCategory === category.id
                     ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg"
                     : "bg-white/80 text-gray-600 hover:bg-primary-50 hover:text-primary-600 border border-gray-100"
@@ -335,7 +334,7 @@ const PortfolioPage = () => {
             ))}
           </motion.div>
 
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div layout className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, index) => (
                 <motion.div
@@ -370,12 +369,12 @@ const PortfolioPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="p-6">
+                    <div className="p-5 md:p-6">
                       <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-3">
                         {project.title}
                       </h3>
                       <p className="text-gray-600 mb-4">{project.shortDesc}</p>
-                      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                      <div className="mt-4 flex flex-col gap-4 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex gap-4">
                           {Object.entries(project.stats || {}).slice(0, 2).map(([key, value]) => (
                             <div key={key} className="text-center">
@@ -384,7 +383,7 @@ const PortfolioPage = () => {
                             </div>
                           ))}
                         </div>
-                        <Button variant="outline" size="sm" className="group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600">
+                        <Button variant="outline" size="sm" className="w-full group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 sm:w-auto">
                           View Details
                         </Button>
                       </div>
@@ -416,11 +415,11 @@ const PortfolioPage = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="fixed inset-10 z-50 overflow-hidden rounded-2xl bg-white"
+              className="fixed inset-3 z-50 overflow-hidden rounded-xl bg-white md:inset-10 md:rounded-2xl"
               style={{ maxWidth: "1200px", margin: "auto" }}
             >
               <div className="h-full flex flex-col">
-                <div className="relative h-72 shrink-0">
+                <div className="relative h-56 shrink-0 md:h-72">
                   <ProjectImage
                     src={selectedProject.image}
                     alt={selectedProject.title}
@@ -428,8 +427,8 @@ const PortfolioPage = () => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                    <Container className="h-full flex flex-col justify-end pb-6">
-                      <h2 className="text-3xl font-bold text-white mb-2">{selectedProject.title}</h2>
+                    <Container className="flex h-full flex-col justify-end pb-5 md:pb-6">
+                      <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl">{selectedProject.title}</h2>
                       <div className="flex flex-wrap gap-2">
                         {selectedProject.technologies.map((tech) => (
                           <Badge key={tech} variant="primary" className={`bg-gradient-to-r ${selectedProject.gradient} text-white`}>
@@ -441,7 +440,7 @@ const PortfolioPage = () => {
                   </div>
                   <button
                     onClick={() => setSelectedProject(null)}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
+                    className="absolute right-3 top-3 rounded-full bg-white/10 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white/20 md:right-4 md:top-4"
                   >
                     <FaTimes className="w-6 h-6" />
                   </button>
@@ -449,7 +448,7 @@ const PortfolioPage = () => {
 
                 {/* Modal Tabs */}
                 {(selectedProject.problemStatement || selectedProject.ourApproach) && (
-                  <div className="flex border-b px-6 bg-white shrink-0">
+                  <div className="flex shrink-0 overflow-x-auto border-b bg-white px-3 md:px-6">
                     {[{ id: 'overview', label: 'Overview' }, { id: 'casestudy', label: '📋 Case Study' }].map(tab => (
                       <button key={tab.id} onClick={() => setModalTab(tab.id)}
                         className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
@@ -462,13 +461,13 @@ const PortfolioPage = () => {
                 )}
 
                 <div className="flex-1 overflow-auto">
-                  <Container className="py-8">
+                  <Container className="py-5 md:py-8">
                     {modalTab === 'casestudy' ? (
                       <div className="max-w-3xl">
                         <CaseStudySection project={selectedProject} />
                       </div>
                     ) : (
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid gap-6 md:grid-cols-3 md:gap-8">
                       <div className="md:col-span-2 space-y-6">
                         <div>
                           <h3 className="text-xl font-semibold text-gray-900 mb-3">Overview</h3>
@@ -518,7 +517,7 @@ const PortfolioPage = () => {
 
                       <div className="space-y-6">
                         {(selectedProject.links?.live || selectedProject.links?.github) && (
-                          <Card className="p-6">
+                          <Card className="p-5 md:p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Links</h3>
                             <div className="space-y-3">
                               {selectedProject.links.live && (
@@ -538,7 +537,7 @@ const PortfolioPage = () => {
                         )}
 
                         {selectedProject.technologies.length > 0 && (
-                          <Card className="p-6">
+                          <Card className="p-5 md:p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Technology Stack</h3>
                             <div className="space-y-2">
                               {selectedProject.technologies.map((tech) => (

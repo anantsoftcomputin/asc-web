@@ -181,7 +181,7 @@ const CRMService = () => {
         {/* Dashboard Content */}
         <div className="p-4">
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             {[
               { label: 'Total Leads', value: '2,547', icon: <FaUsers /> },
               { label: 'Pipeline Value', value: '$1.2M', icon: <FaChartLine /> },

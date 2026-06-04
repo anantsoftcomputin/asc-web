@@ -56,6 +56,23 @@ export const metadata = {
   alternates: {
     canonical: BASE_URL,
   },
+  applicationName: 'AnantSoftComputing',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'AnantSoft',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icons/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/icons/icon.svg' }],
+  },
 };
 
 export default function RootLayout({ children }) {

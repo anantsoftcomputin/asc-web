@@ -355,7 +355,7 @@ export default function BlogPage() {
               inbox
             </p>
             <form
-              className="flex gap-4 max-w-md mx-auto"
+              className="mx-auto flex max-w-md flex-col gap-3 sm:flex-row sm:gap-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 alert("Subscribed (demo)");
@@ -364,11 +364,11 @@ export default function BlogPage() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white"
+                className="min-w-0 flex-1 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white"
               />
               <button
                 type="submit"
-                className="px-8 py-3 bg-white text-primary-600 rounded-full font-medium hover:bg-primary-50 transition-colors"
+                className="rounded-full bg-white px-8 py-3 font-medium text-primary-600 transition-colors hover:bg-primary-50"
               >
                 Subscribe
               </button>
@@ -385,7 +385,7 @@ export default function BlogPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-8 right-8 p-3 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-colors z-50"
+            className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-50 rounded-full bg-primary-600 p-3 text-white shadow-lg transition-colors hover:bg-primary-700 md:bottom-8 md:right-8"
           >
             <ArrowUp className="w-6 h-6" />
           </motion.button>

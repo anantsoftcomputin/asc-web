@@ -166,7 +166,7 @@ export default function CareersPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="mt-12 grid grid-cols-3 gap-8"
+              className="mobile-stat-grid mt-12 grid grid-cols-3 gap-8 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none"
             >
               {[
                 { value: jobOpenings.length + "+", label: "Open Positions" },

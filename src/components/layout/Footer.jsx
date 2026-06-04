@@ -56,7 +56,7 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200" aria-labelledby="footer-heading">
       <Container>
-        <div className="py-12 lg:py-16">
+        <div className="py-10 pb-28 md:pb-12 lg:py-16">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8">
               <Link href="/" className="flex items-center">
@@ -79,7 +79,7 @@ const Footer = () => {
                 ))}
               </div>
             </div>
-            <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-base font-semibold text-gray-900">Solutions</h3>

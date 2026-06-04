@@ -1,15 +1,47 @@
 {
   "name": "AnantSoftComputing",
   "short_name": "AnantSoft",
+  "description": "Custom software, CRM, mobile app, SEO, and digital transformation services.",
   "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "theme_color": "#4a6596",
+  "orientation": "portrait",
+  "categories": ["business", "productivity", "technology"],
+  "shortcuts": [
+    {
+      "name": "Services",
+      "short_name": "Services",
+      "url": "/services",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Portfolio",
+      "short_name": "Work",
+      "url": "/portfolio",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "url": "/contact",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ],
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "16x16 32x32",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

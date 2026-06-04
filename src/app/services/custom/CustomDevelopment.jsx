@@ -124,7 +124,7 @@ const CustomDevelopment = () => {
                 from enterprise ERP systems to hospital management, NGO platforms,
                 and Gaushala management software. Scalable, secure, and delivered on time.
               </p>
-              <div className="flex gap-4">
+              <div className="mobile-stack-actions flex gap-4">
                 <Button 
                   variant="primary"
                   className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
@@ -137,7 +137,7 @@ const CustomDevelopment = () => {
               </div>
 
               {/* Achievement Stats */}
-              <div className="mt-12 grid grid-cols-3 gap-6">
+              <div className="mobile-stat-grid mt-12 grid grid-cols-3 gap-6 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none">
                 {[
                   { value: '200+', label: 'Projects Delivered' },
                   { value: '15+', label: 'Industries Served' },

@@ -99,7 +99,7 @@ const SEOService = () => {
                 data-driven SEO strategies — keyword research, technical SEO, on-page optimization,
                 link building, and local SEO tailored to your business goals.
               </p>
-              <div className="flex gap-4">
+              <div className="mobile-stack-actions flex gap-4">
                 <Button 
                   variant="primary"
                   className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
@@ -112,7 +112,7 @@ const SEOService = () => {
               </div>
 
               {/* Key Metrics */}
-              <div className="grid grid-cols-3 gap-6 mt-12">
+              <div className="mobile-stat-grid mt-12 grid grid-cols-3 gap-6 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none">
                 {[
                   { value: '200+', label: 'SEO Projects' },
                   { value: '85%', label: 'Avg. Traffic Increase' },

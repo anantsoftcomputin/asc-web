@@ -34,7 +34,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-b from-primary-100 via-white to-secondary-100">
+    <section className="relative overflow-hidden bg-gradient-to-b from-primary-100 via-white to-secondary-100 md:min-h-[80vh]">
       {/* Animated background elements */}
       <div className="absolute inset-0 -z-10">
         <motion.div
@@ -54,13 +54,19 @@ const Hero = () => {
         />
       </div>
 
-      <Container className="relative pt-32 pb-16 text-center lg:pt-40">
+      <Container className="relative pt-24 pb-12 text-center sm:pt-28 md:pt-32 md:pb-16 lg:pt-40">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
           className="mx-auto max-w-4xl"
         >
+          <motion.div
+            variants={itemVariants}
+            className="mx-auto mb-5 inline-flex items-center rounded-full border border-primary-200 bg-white/80 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-primary-700 shadow-sm md:hidden"
+          >
+            Vadodara software partner
+          </motion.div>
           <motion.h1
             className="text-4xl font-bold tracking-tight text-dark sm:text-6xl md:text-7xl"
             variants={itemVariants}
@@ -79,7 +85,7 @@ const Hero = () => {
           </motion.p>
 
           <motion.div
-            className="mt-10 flex items-center justify-center gap-x-6"
+            className="mobile-stack-actions mt-8 flex items-center justify-center gap-x-6 md:mt-10"
             variants={itemVariants}
           >
             <motion.div
@@ -91,7 +97,7 @@ const Hero = () => {
                 size="lg"
                 variant="primary"
                 onClick={handleGetStarted}
-                className="bg-gradient-to-r from-primary-400 to-primary-600 hover:from-primary-500 hover:to-primary-700 shadow-xl shadow-primary-200/30"
+                className="min-h-12 bg-gradient-to-r from-primary-400 to-primary-600 shadow-xl shadow-primary-200/30 hover:from-primary-500 hover:to-primary-700"
               >
                 Get Started
               </Button>
@@ -106,7 +112,7 @@ const Hero = () => {
                 size="lg"
                 variant="outline"
                 onClick={handleViewWork}
-                className="border-primary-400 text-primary-600 hover:bg-primary-50"
+                className="min-h-12 border-primary-400 text-primary-600 hover:bg-primary-50"
               >
                 View Our Work
               </Button>
@@ -119,7 +125,7 @@ const Hero = () => {
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          className="mobile-card-grid mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-4 md:mt-20 md:grid-cols-3 md:gap-8"
         >
           {[
             { title: 'SEO', desc: 'Website Rankings' },
@@ -130,7 +136,7 @@ const Hero = () => {
               key={tech.title}
               variants={itemVariants}
               whileHover={{ y: -10, scale: 1.05 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-primary-100"
+              className="rounded-xl border border-primary-100 bg-white/85 p-5 text-left shadow-lg shadow-primary-900/5 backdrop-blur-sm md:rounded-2xl md:p-8 md:text-center md:shadow-xl"
             >
               <h3 className="text-xl font-semibold text-primary-600 mb-2">
                 {tech.title}

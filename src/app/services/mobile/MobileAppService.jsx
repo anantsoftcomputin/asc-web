@@ -121,7 +121,7 @@ const MobileAppService = () => {
                 native and cross-platform — that deliver exceptional user experiences
                 and are built to scale with your business.
               </p>
-              <div className="flex gap-4">
+              <div className="mobile-stack-actions flex gap-4">
                 <Button 
                   variant="primary"
                   className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
@@ -134,7 +134,7 @@ const MobileAppService = () => {
               </div>
 
               {/* Key Stats */}
-              <div className="mt-12 grid grid-cols-3 gap-6">
+              <div className="mobile-stat-grid mt-12 grid grid-cols-3 gap-6 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none">
                 {[
                   { value: '100+', label: 'Apps Delivered' },
                   { value: '4.8★', label: 'App Rating' },
@@ -157,8 +157,8 @@ const MobileAppService = () => {
               {/* Phone Mockup */}
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-secondary-500/10 rounded-3xl transform rotate-6" />
-                <Card className="p-8 backdrop-blur-sm">
-                  <div className="relative mx-auto w-[280px] h-[580px] bg-gray-900 rounded-[3rem] ring-1 ring-gray-900/10">
+                <Card className="p-5 backdrop-blur-sm md:p-8">
+                  <div className="relative mx-auto h-[520px] w-full max-w-[260px] rounded-[2.5rem] bg-gray-900 ring-1 ring-gray-900/10 md:h-[580px] md:max-w-[280px] md:rounded-[3rem]">
                     <div className="absolute top-[0.8rem] left-1/2 transform -translate-x-1/2 w-16 h-4 bg-gray-800 rounded-full" />
                     <div className="absolute top-[2rem] bottom-[2rem] left-[0.8rem] right-[0.8rem] bg-white rounded-[2.25rem] overflow-hidden">
                       <Image 
