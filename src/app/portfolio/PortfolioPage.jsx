@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Container, Card, Badge, Button } from "../../components/common";
 import { CTA } from "../../components/sections";
 import { FaTimes, FaGlobe, FaGithub } from "react-icons/fa";
-import Image from "next/image";
 import { projectAPI } from "../../lib/firebase-admin";
+import { isUnavailableImageSrc } from "../../lib/image-utils";
 
 // Hardcoded fallback shown until admin populates Firestore
 const FALLBACK_PROJECTS = [
@@ -192,26 +192,28 @@ function normalizeProject(doc) {
   };
 }
 
-function ProjectImage({ src, alt, gradient, fill, className, sizes }) {
+function ProjectImage({ src, alt, gradient, className }) {
   const [errored, setErrored] = useState(false);
-  if (!src || errored) {
+  if (isUnavailableImageSrc(src) || errored) {
     return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
   }
+
   return (
-    <Image
+    <img
       src={src}
       alt={alt}
-      fill={fill}
-      className={className}
-      sizes={sizes}
+      className={`h-full w-full ${className || ""}`}
       onError={() => setErrored(true)}
-      unoptimized={src.startsWith('data:')}
     />
   );
 }
 
 const ALL_CATEGORIES = [
   { id: "all", name: "All Projects", icon: "🌟" },
+  { id: "greenenergy", name: "Green Energy", icon: "🌱" },
+  { id: "finance", name: "Finance", icon: "💼" },
+  { id: "realestate", name: "Real Estate", icon: "🏠" },
+  { id: "corporate", name: "Corporate", icon: "🏛️" },
   { id: "healthcare", name: "Healthcare", icon: "🏥" },
   { id: "education", name: "Education", icon: "🎓" },
   { id: "ngo", name: "Non-Profit", icon: "🤝" },
@@ -261,7 +263,6 @@ const PortfolioPage = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [modalTab, setModalTab] = useState('overview');
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadProjects();
@@ -272,7 +273,6 @@ const PortfolioPage = () => {
     if (result.success && result.data.length > 0) {
       setProjects(result.data.map(normalizeProject));
     }
-    setLoading(false);
   };
 
   const activeCategories = ALL_CATEGORIES.filter(
@@ -335,75 +335,67 @@ const PortfolioPage = () => {
             ))}
           </motion.div>
 
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" />
-            </div>
-          ) : (
-            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project, index) => (
-                  <motion.div
-                    key={project.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="group"
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="group"
+                >
+                  <Card
+                    className="h-full overflow-hidden bg-white/80 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary-200/20 transition-all duration-500 border border-gray-100 hover:border-primary-200"
+                    onClick={() => { setSelectedProject(project); setModalTab('overview'); }}
                   >
-                    <Card
-                      className="h-full overflow-hidden bg-white/80 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary-200/20 transition-all duration-500 border border-gray-100 hover:border-primary-200"
-                      onClick={() => { setSelectedProject(project); setModalTab('overview'); }}
-                    >
-                      <div className="relative overflow-hidden">
-                        <div className="relative h-56 w-full">
-                          <ProjectImage
-                            src={project.image}
-                            alt={project.title}
-                            gradient={project.gradient}
-                            fill
-                            className="object-cover transform group-hover:scale-110 transition-transform duration-700"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          />
-                        </div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-                            {project.technologies.slice(0, 3).map((tech) => (
-                              <Badge key={tech} variant="primary" className={`bg-gradient-to-r ${project.gradient} text-white`}>
-                                {tech}
-                              </Badge>
-                            ))}
-                          </div>
+                    <div className="relative overflow-hidden">
+                      <div className="relative h-56 w-full">
+                        <ProjectImage
+                          src={project.image}
+                          alt={project.title}
+                          gradient={project.gradient}
+                          className="object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+                          {project.technologies.slice(0, 3).map((tech) => (
+                            <Badge key={tech} variant="primary" className={`bg-gradient-to-r ${project.gradient} text-white`}>
+                              {tech}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-3">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-600 mb-4">{project.shortDesc}</p>
-                        <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                          <div className="flex gap-4">
-                            {Object.entries(project.stats || {}).slice(0, 2).map(([key, value]) => (
-                              <div key={key} className="text-center">
-                                <div className="text-primary-600 font-semibold">{value}</div>
-                                <div className="text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</div>
-                              </div>
-                            ))}
-                          </div>
-                          <Button variant="outline" size="sm" className="group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600">
-                            View Details
-                          </Button>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 mb-3">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4">{project.shortDesc}</p>
+                      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <div className="flex gap-4">
+                          {Object.entries(project.stats || {}).slice(0, 2).map(([key, value]) => (
+                            <div key={key} className="text-center">
+                              <div className="text-primary-600 font-semibold">{value}</div>
+                              <div className="text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</div>
+                            </div>
+                          ))}
                         </div>
+                        <Button variant="outline" size="sm" className="group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600">
+                          View Details
+                        </Button>
                       </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          )}
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
 
-          {!loading && filteredProjects.length === 0 && (
+          {filteredProjects.length === 0 && (
             <div className="text-center py-20 text-gray-500">No projects in this category yet.</div>
           )}
         </Container>
@@ -433,7 +425,6 @@ const PortfolioPage = () => {
                     src={selectedProject.image}
                     alt={selectedProject.title}
                     gradient={selectedProject.gradient}
-                    fill
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">

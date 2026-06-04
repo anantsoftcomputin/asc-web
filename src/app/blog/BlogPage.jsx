@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { Search, ArrowUp } from "lucide-react";
 import { blogAPI } from "../../lib/firebase-admin";
+import { isUnavailableImageSrc } from "../../lib/image-utils";
 
 const PRODUCTION_CATEGORIES = [
   "All",
@@ -240,7 +241,7 @@ export default function BlogPage() {
 
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {post.author?.avatar ? (
+                        {!isUnavailableImageSrc(post.author?.avatar) ? (
                           <img
                             src={post.author.avatar}
                             alt={post.author?.name || 'Author'}

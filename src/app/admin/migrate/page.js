@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaBlog, FaDatabase, FaPlay, FaCheck, FaTimes, FaFolder, FaExclamationTriangle } from 'react-icons/fa';
 import { migrateAllData } from '../../../lib/migrate-data';
-import { seedProjects } from '../../../lib/seed-projects';
+import { ALL_PROJECTS, PROJECT_SEED_COUNT, seedProjects } from '../../../lib/seed-projects';
 import { seedBlogs } from '../../../lib/seed-blogs';
 import { blogAPI, projectAPI } from '../../../lib/firebase-admin';
 
@@ -49,9 +49,9 @@ export default function MigratePage() {
   const handleSeedProjects = async () => {
     if (existingProjectCount === null) { await handleSeedCheck(); return; }
     if (existingProjectCount > 0) {
-      if (!window.confirm(`There are already ${existingProjectCount} project(s) in Firebase. Seeding will ADD ${10} more without removing existing ones. Continue?`)) return;
+      if (!window.confirm(`There are already ${existingProjectCount} project(s) in Firebase. Seeding will add only missing projects from the ${PROJECT_SEED_COUNT}-project seed set and skip duplicates. Continue?`)) return;
     } else {
-      if (!window.confirm('This will add 10 portfolio projects to Firebase. Continue?')) return;
+      if (!window.confirm(`This will add ${PROJECT_SEED_COUNT} portfolio projects to Firebase. Continue?`)) return;
     }
 
     setProjectSeeding(true);
@@ -113,17 +113,16 @@ export default function MigratePage() {
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-1">Seed Portfolio Projects</h2>
             <p className="text-gray-600">
-              Populate Firebase with all 10 portfolio projects — complete with SEO-optimised descriptions, case studies, technologies, stats, and project details.
+              Populate Firebase with the portfolio project seed set — complete with SEO-optimised descriptions, case studies, technologies, stats, and project details.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {['Pawppy.in', 'Ikama.in', 'OEC CRM', 'OEC India', 'Espionline',
-            'Indraprasth Foundation', 'Edustation', 'SMHRI Hospital', 'ESPI CRM', 'StudyStreak'].map(name => (
-            <div key={name} className="flex items-center gap-2 text-sm text-gray-600">
+          {ALL_PROJECTS.map((project) => (
+            <div key={project.title} className="flex items-center gap-2 text-sm text-gray-600">
               <span className="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✓</span>
-              {name}
+              {project.title}
             </div>
           ))}
         </div>
@@ -136,7 +135,10 @@ export default function MigratePage() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-lg">
               <span className="flex items-center gap-2 text-green-600 font-semibold">
-                <FaCheck /> {projectSeedResults.success} projects added successfully
+                <FaCheck /> {projectSeedResults.success} project(s) added
+              </span>
+              <span className="flex items-center gap-2 text-gray-600 font-semibold">
+                {projectSeedResults.skipped} duplicate(s) skipped
               </span>
               {projectSeedResults.failed > 0 && (
                 <span className="flex items-center gap-2 text-red-600 font-semibold">
@@ -164,7 +166,7 @@ export default function MigratePage() {
               {projectSeeding ? (
                 <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" /> Seeding Projects...</>
               ) : (
-                <><FaPlay /> Seed All 10 Projects</>
+                <><FaPlay /> Seed Missing Projects</>
               )}
             </button>
             {existingProjectCount !== null && (

@@ -4,29 +4,49 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Container } from '../common';
-import { FaQuoteLeft, FaStar } from 'react-icons/fa';
+import { FaQuoteLeft } from 'react-icons/fa';
 import { testimonialAPI } from '../../lib/firebase-admin';
-import Image from "next/image";
+import { isUnavailableImageSrc } from "../../lib/image-utils";
+
+const FALLBACK_TESTIMONIALS = [
+  {
+    id: "fallback-1",
+    name: "OEC India",
+    role: "Education Partner",
+    organization: "OEC India",
+    quote:
+      "AnantSoftComputing helped us move critical education workflows online with a platform that was reliable, practical, and easy for our team to manage.",
+    image: "",
+  },
+  {
+    id: "fallback-2",
+    name: "SMHRI Hospital",
+    role: "Healthcare Partner",
+    organization: "SMHRI Hospital",
+    quote:
+      "Their team understood our operational challenges and delivered a digital solution that made patient communication and appointments smoother.",
+    image: "",
+  },
+];
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState(FALLBACK_TESTIMONIALS);
 
   useEffect(() => {
     loadTestimonials();
   }, []);
 
   const loadTestimonials = async () => {
-    setLoading(true);
     const result = await testimonialAPI.getAll();
     if (result.success && result.data.length > 0) {
       setTestimonials(result.data);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
+    if (testimonials.length <= 1) return;
+
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => 
         prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
@@ -68,12 +88,7 @@ const Testimonials = () => {
 
           {/* Testimonials Slider */}
           <div className="relative">
-            {loading ? (
-              <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading testimonials...</p>
-              </div>
-            ) : testimonials.length === 0 ? (
+            {testimonials.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
                 <p className="text-gray-600">No testimonials available</p>
               </div>
@@ -96,7 +111,7 @@ const Testimonials = () => {
                   </p>
 
                   <div className="flex items-center gap-4">
-                    {testimonials[currentIndex].image ? (
+                    {!isUnavailableImageSrc(testimonials[currentIndex].image) ? (
                       <img
                         src={testimonials[currentIndex].image}
                         alt={testimonials[currentIndex].name}

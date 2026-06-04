@@ -10,6 +10,15 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  async redirects() {
+    return [
+      {
+        source: "/favicon.png",
+        destination: "/favicon.ico",
+        permanent: false,
+      },
+    ];
+  },
 
   images: {
     remotePatterns: [

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import ReadMoreButton from "../blog/ReadMoreButton";
+import { isUnavailableImageSrc } from "../../lib/image-utils";
 
 export default function BlogCarousel({ posts }) {
   const sample = [
@@ -147,7 +148,7 @@ export default function BlogCarousel({ posts }) {
 
                   <div className="mt-auto flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {post.author?.avatar ? (
+                      {!isUnavailableImageSrc(post.author?.avatar) ? (
                         <div className="relative h-6 w-6 overflow-hidden rounded-full">
                           <Image
                             src={post.author.avatar}

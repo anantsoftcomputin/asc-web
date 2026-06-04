@@ -16,6 +16,19 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { isUnavailableImageSrc } from '../../lib/image-utils'
+
+function AuthorAvatar({ author, className }) {
+  if (!isUnavailableImageSrc(author?.avatar)) {
+    return <img src={author.avatar} alt={author.name} className={className} />
+  }
+
+  return (
+    <div className={`${className} bg-primary-600 text-white flex items-center justify-center font-bold`}>
+      {(author?.name || 'A').charAt(0).toUpperCase()}
+    </div>
+  )
+}
 
 export default function BlogPostClient({ post }) {
   const router = useRouter()
@@ -109,7 +122,7 @@ export default function BlogPostClient({ post }) {
             <div className="flex flex-wrap items-center gap-8 mb-12">
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <img src={post.author.avatar} alt={post.author.name} className="w-12 h-12 rounded-full ring-2 ring-white" />
+                  <AuthorAvatar author={post.author} className="w-12 h-12 rounded-full ring-2 ring-white" />
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary-200 rounded-full flex items-center justify-center ring-2 ring-white">
                     <Check className="w-3 h-3 text-white" />
                   </div>
@@ -142,7 +155,7 @@ export default function BlogPostClient({ post }) {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-start gap-6">
-                  <img src={post.author.avatar} alt={post.author.name} className="w-16 h-16 rounded-full ring-4 ring-white shadow-md" />
+                  <AuthorAvatar author={post.author} className="w-16 h-16 rounded-full ring-4 ring-white shadow-md" />
                   <div>
                     <h3 className="text-xl font-bold text-dark mb-2">About {post.author.name}</h3>
                     <p className="text-dark-light">Expert in software development and technology trends with years of experience in the industry.</p>

@@ -20,9 +20,13 @@ const GRADIENTS = [
 ];
 
 const CATEGORIES = [
-  'healthcare', 'education', 'crm', 'enterprise',
-  'e-commerce', 'mobile', 'web', 'ngo', 'franchise', 'petcare', 'other',
+  'healthcare', 'education', 'crm', 'enterprise', 'greenenergy',
+  'finance', 'realestate', 'corporate', 'e-commerce', 'mobile',
+  'web', 'ngo', 'franchise', 'petcare', 'other',
 ];
+
+const MAX_INLINE_IMAGE_BYTES = 700 * 1024;
+const MAX_FIRESTORE_FIELD_BYTES = 1_000_000;
 
 const EMPTY_FORM = {
   title: '',
@@ -74,9 +78,18 @@ export default function ProjectsManagement() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 1024 * 1024) { alert('Image size should be less than 1MB'); return; }
+    if (file.size > MAX_INLINE_IMAGE_BYTES) {
+      alert('Uploaded images must be under 700KB. For larger images, upload them to storage and paste the image URL instead.');
+      e.target.value = '';
+      return;
+    }
     const reader = new FileReader();
     reader.onloadend = () => {
+      if (typeof reader.result === 'string' && reader.result.length > MAX_FIRESTORE_FIELD_BYTES) {
+        alert('This image is too large to save inline. Please use an image URL instead.');
+        e.target.value = '';
+        return;
+      }
       setImagePreview(reader.result);
       setFormData(prev => ({ ...prev, image: reader.result }));
     };
@@ -85,6 +98,11 @@ export default function ProjectsManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.image?.length > MAX_FIRESTORE_FIELD_BYTES) {
+      alert('The project image is too large to save. Please replace it with an image URL or upload an image under 700KB.');
+      return;
+    }
+
     setSaving(true);
     const data = {
       ...formData,
@@ -101,6 +119,11 @@ export default function ProjectsManagement() {
   };
 
   const handleEdit = (project) => {
+    const hasOversizedInlineImage =
+      typeof project.image === 'string' &&
+      project.image.startsWith('data:') &&
+      project.image.length > MAX_FIRESTORE_FIELD_BYTES;
+
     setEditingProject(project);
     setFormData({
       title: project.title || '',
@@ -111,7 +134,7 @@ export default function ProjectsManagement() {
       technologies: Array.isArray(project.technologies) ? project.technologies.join(', ') : '',
       features: Array.isArray(project.features) ? project.features.join('\n') : '',
       results: Array.isArray(project.results) ? project.results.join('\n') : '',
-      image: project.image || '',
+      image: hasOversizedInlineImage ? '' : project.image || '',
       gradient: project.gradient || 'from-primary-400 to-primary-600',
       liveLink: project.liveLink || '',
       githubLink: project.githubLink || '',
@@ -124,7 +147,10 @@ export default function ProjectsManagement() {
       caseStudyOutcome: project.caseStudyOutcome || '',
       featured: project.featured || false,
     });
-    setImagePreview(project.image || null);
+    setImagePreview(hasOversizedInlineImage ? null : project.image || null);
+    if (hasOversizedInlineImage) {
+      alert('This project has an oversized inline image. Please paste an image URL or upload an image under 700KB before saving.');
+    }
     setActiveTab('details');
     setShowModal(true);
   };
@@ -323,10 +349,11 @@ export default function ProjectsManagement() {
               ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
-              {/* ── TAB: Project Details ── */}
-              {activeTab === 'details' && (
-                <div className="p-6 space-y-5">
+            <form onSubmit={handleSubmit} className="flex flex-1 min-h-0 flex-col">
+              <div className="flex-1 overflow-y-auto">
+                {/* ── TAB: Project Details ── */}
+                {activeTab === 'details' && (
+                  <div className="p-6 space-y-5">
                   {/* Image */}
                   <div>
                     <label className={labelCls}>Project Image</label>
@@ -345,7 +372,7 @@ export default function ProjectsManagement() {
                           onChange={(e) => { setFormData(p => ({ ...p, image: e.target.value })); setImagePreview(e.target.value); }}
                           placeholder="Or paste image URL: https://..."
                           className={`${inputCls} text-sm`} />
-                        <p className="text-xs text-gray-400">Max 1MB for uploaded files</p>
+                        <p className="text-xs text-gray-400">Max 700KB for inline uploads. Use a URL for larger images.</p>
                       </div>
                     </div>
                   </div>
@@ -438,12 +465,12 @@ export default function ProjectsManagement() {
                     <input type="checkbox" id="featured" checked={formData.featured} onChange={set('featured')} className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
                     <label htmlFor="featured" className="text-sm text-gray-700">Featured project (pinned at top)</label>
                   </div>
-                </div>
-              )}
+                  </div>
+                )}
 
-              {/* ── TAB: Case Study ── */}
-              {activeTab === 'casestudy' && (
-                <div className="p-6 space-y-5">
+                {/* ── TAB: Case Study ── */}
+                {activeTab === 'casestudy' && (
+                  <div className="p-6 space-y-5">
                   <div className="p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
                     Case study content appears in the project detail modal and helps visitors understand the real-world problem you solved. Write it like a story — problem, approach, solution, outcome.
                   </div>
@@ -491,8 +518,9 @@ export default function ProjectsManagement() {
                       placeholder="Describe the measurable results — faster processes, cost savings, revenue growth, user adoption, efficiency gains, customer satisfaction improvements..."
                     />
                   </div>
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
 
               {/* Footer Actions */}
               <div className="px-6 py-4 border-t bg-gray-50 flex gap-3 shrink-0">

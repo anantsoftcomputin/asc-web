@@ -4,8 +4,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Container, Card, Badge } from '../common';
-import Image from "next/image";
 import { portfolioAPI } from '../../lib/firebase-admin';
+import { isUnavailableImageSrc } from '../../lib/image-utils';
 
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -123,7 +123,7 @@ const Portfolio = () => {
                                  border border-gray-100 hover:border-primary-200
                                  hover:shadow-xl hover:shadow-primary-200/20">
                     <div className="relative overflow-hidden h-48">
-                      {project.image ? (
+                      {!isUnavailableImageSrc(project.image) ? (
                         <img
                           src={project.image}
                           alt={project.title}

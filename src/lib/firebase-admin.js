@@ -38,6 +38,10 @@ const withTimeout = async (promise, label) => {
   }
 };
 
+const isReadTimeout = (error) =>
+  typeof error?.message === "string" &&
+  error.message.includes(`timed out after ${READ_TIMEOUT_MS}ms`);
+
 // Generic CRUD operations
 export const firebaseAdmin = {
   // Create
@@ -75,7 +79,9 @@ export const firebaseAdmin = {
         return { success: false, error: "Document not found" };
       }
     } catch (error) {
-      console.error("Error reading document:", error);
+      if (!isReadTimeout(error)) {
+        console.error("Error reading document:", error);
+      }
       return { success: false, error: error.message };
     }
   },
@@ -119,7 +125,9 @@ export const firebaseAdmin = {
       
       return { success: true, data: documents };
     } catch (error) {
-      console.error("Error reading documents:", error);
+      if (!isReadTimeout(error)) {
+        console.error("Error reading documents:", error);
+      }
       return { success: false, error: error.message };
     }
   },

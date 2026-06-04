@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container, Card, Badge, Button } from "../common";
 import { FaTimes, FaGlobe, FaGithub } from "react-icons/fa";
-import Image from "next/image";
 import { projectAPI } from "../../lib/firebase-admin";
+import { isUnavailableImageSrc } from "../../lib/image-utils";
 
 const FALLBACK_PROJECTS = [
   {
@@ -139,17 +139,26 @@ function normalizeProject(doc) {
   };
 }
 
-function ProjectImage({ src, alt, gradient, fill, className, sizes }) {
+function ProjectImage({ src, alt, gradient, className }) {
   const [errored, setErrored] = useState(false);
-  if (!src || errored) return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
+  if (isUnavailableImageSrc(src) || errored) return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
+
   return (
-    <Image src={src} alt={alt} fill={fill} className={className} sizes={sizes}
-      onError={() => setErrored(true)} unoptimized={src.startsWith('data:')} />
+    <img
+      src={src}
+      alt={alt}
+      className={`h-full w-full ${className || ""}`}
+      onError={() => setErrored(true)}
+    />
   );
 }
 
 const ALL_CATEGORIES = [
   { id: "all", name: "All Projects", icon: "🌟" },
+  { id: "greenenergy", name: "Green Energy", icon: "🌱" },
+  { id: "finance", name: "Finance", icon: "💼" },
+  { id: "realestate", name: "Real Estate", icon: "🏠" },
+  { id: "corporate", name: "Corporate", icon: "🏛️" },
   { id: "healthcare", name: "Healthcare", icon: "🏥" },
   { id: "education", name: "Education", icon: "🎓" },
   { id: "ngo", name: "Non-Profit", icon: "🤝" },
@@ -199,14 +208,12 @@ export default function PortfolioGrid() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [modalTab, setModalTab] = useState('overview');
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     projectAPI.getAll().then(result => {
       if (result.success && result.data.length > 0) {
         setProjects(result.data.map(normalizeProject));
       }
-      setLoading(false);
     });
   }, []);
 
@@ -220,18 +227,6 @@ export default function PortfolioGrid() {
   const filteredProjects = selectedCategory === "all"
     ? projects
     : projects.filter(p => p.category === selectedCategory);
-
-  if (loading) {
-    return (
-      <section className="py-20">
-        <Container>
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" />
-          </div>
-        </Container>
-      </section>
-    );
-  }
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -262,9 +257,8 @@ export default function PortfolioGrid() {
                   onClick={() => openProject(project)}>
                   <div className="relative overflow-hidden">
                     <div className="relative h-56 w-full">
-                      <ProjectImage src={project.image} alt={project.title} gradient={project.gradient} fill
-                        className="object-cover transform group-hover:scale-110 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+                      <ProjectImage src={project.image} alt={project.title} gradient={project.gradient}
+                        className="object-cover transform group-hover:scale-110 transition-transform duration-700" />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
@@ -319,7 +313,7 @@ export default function PortfolioGrid() {
               {/* Header Image */}
               <div className="relative h-56 shrink-0">
                 <ProjectImage src={selectedProject.image} alt={selectedProject.title} gradient={selectedProject.gradient}
-                  fill className="w-full h-full object-cover" />
+                  className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                   <Container className="h-full flex flex-col justify-end pb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedProject.title}</h2>

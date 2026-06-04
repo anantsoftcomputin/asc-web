@@ -13,6 +13,7 @@ import {
 import { Container, Badge, Card } from '../../components/common'
 import { Stats, CTA } from '../../components/sections'
 import { teamAPI } from '../../lib/firebase-admin'
+import { isUnavailableImageSrc } from '../../lib/image-utils'
 import Image from 'next/image'
 
 export default function AboutPage() {
@@ -314,7 +315,7 @@ export default function AboutPage() {
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow">
                     <div className="relative h-64">
-                      {member.image ? (
+                      {!isUnavailableImageSrc(member.image) ? (
                         <img
                           src={member.image}
                           alt={member.name}
