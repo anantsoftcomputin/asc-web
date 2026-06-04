@@ -14,7 +14,12 @@ const nextConfig = {
     return [
       {
         source: "/favicon.png",
-        destination: "/favicon.ico",
+        destination: "/asc-logo.png",
+        permanent: false,
+      },
+      {
+        source: "/favicon.ico",
+        destination: "/asc-logo.png",
         permanent: false,
       },
     ];

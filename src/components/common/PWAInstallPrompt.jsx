@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import ASCLogo from "./ASCLogo";
 
 export default function PWAInstallPrompt() {
   const [installEvent, setInstallEvent] = useState(null);
@@ -41,10 +42,10 @@ export default function PWAInstallPrompt() {
     <div className="fixed inset-x-4 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-[65] mx-auto max-w-md rounded-2xl border border-primary-100 bg-white p-4 shadow-2xl shadow-primary-900/15 md:hidden">
       <div className="flex gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white">
-          <Download className="h-5 w-5" />
+          <ASCLogo showWordmark={false} markClassName="!w-9 !h-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-gray-950">Install AnantSoft</p>
+          <p className="text-sm font-semibold text-gray-950">Install ASC</p>
           <p className="mt-1 text-xs leading-5 text-gray-600">
             Add it to your home screen for faster access and offline-friendly browsing.
           </p>
@@ -54,6 +55,7 @@ export default function PWAInstallPrompt() {
               onClick={install}
               className="min-h-10 rounded-lg bg-primary-600 px-4 text-sm font-semibold text-white"
             >
+              <Download className="mr-1 inline h-4 w-4" />
               Install
             </button>
             <button

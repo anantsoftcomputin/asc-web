@@ -16,31 +16,31 @@
       "name": "Services",
       "short_name": "Services",
       "url": "/services",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "/asc-logo.png", "sizes": "460x460", "type": "image/png" }]
     },
     {
       "name": "Portfolio",
       "short_name": "Work",
       "url": "/portfolio",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "/asc-logo.png", "sizes": "460x460", "type": "image/png" }]
     },
     {
       "name": "Contact",
       "short_name": "Contact",
       "url": "/contact",
-      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "/asc-logo.png", "sizes": "460x460", "type": "image/png" }]
     }
   ],
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "16x16 32x32",
-      "type": "image/x-icon"
+      "src": "/favicon.png",
+      "sizes": "460x460",
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/asc-logo.png",
+      "sizes": "460x460",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

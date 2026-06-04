@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import ASCLogo from '../common/ASCLogo';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const pathname = usePathname();
@@ -67,8 +68,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               {/* Header */}
               <div className="px-4 py-6 border-b border-gray-200">
                 <Link href="/" onClick={onClose} className="flex items-center">
-                  <span className="text-xl font-bold text-primary">Anant</span>
-                  <span className="text-xl font-light text-gray-800 ml-2">Soft</span>
+                  <ASCLogo markClassName="!w-20 !h-9" />
                 </Link>
               </div>
 

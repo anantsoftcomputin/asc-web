@@ -15,6 +15,7 @@ import {
 
 import HorizontalTagsMarquee from '../sections/HorizontalTagsMarquee'
 import ProjectsGrid from '../sections/ProjectsGrid'
+import MobileHomeExperience from './MobileHomeExperience'
 
 export default function Home() {
   
@@ -30,16 +31,19 @@ export default function Home() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <Hero />
-      <HorizontalTagsMarquee />
-      <Services />
-      <Features />
-      {/* <Portfolio /> */}
-      <ProjectsGrid />
-      <Stats />
-      <Testimonials />
-      <CTA />
-      <Contact />
+      <MobileHomeExperience />
+      <div className="hidden md:block">
+        <Hero />
+        <HorizontalTagsMarquee />
+        <Services />
+        <Features />
+        {/* <Portfolio /> */}
+        <ProjectsGrid />
+        <Stats />
+        <Testimonials />
+        <CTA />
+        <Contact />
+      </div>
     </motion.div>
   )
 }

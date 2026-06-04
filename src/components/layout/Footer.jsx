@@ -1,6 +1,7 @@
 // src/components/layout/Footer.jsx
 import Link from 'next/link'
 import Container from './Container';
+import ASCLogo from '../common/ASCLogo';
 
 const Footer = () => {
   const navigation = {
@@ -55,13 +56,47 @@ const Footer = () => {
 
   return (
     <footer className="bg-white border-t border-gray-200" aria-labelledby="footer-heading">
+      <div className="md:hidden">
+        <div className="px-4 py-5 pb-28">
+          <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-primary-50/60 p-4 shadow-sm">
+            <Link href="/" className="flex items-center gap-2">
+              <ASCLogo markClassName="!w-28 !h-11" />
+            </Link>
+
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <a href="tel:9638544455" className="rounded-xl bg-white px-3 py-2 text-center text-xs font-bold text-gray-700 shadow-sm">
+                Call
+              </a>
+              <Link href="/contact" className="rounded-xl bg-primary-700 px-3 py-2 text-center text-xs font-bold text-white shadow-sm">
+                Enquire
+              </Link>
+              <a href="mailto:support@anantsoftcomputing.com" className="rounded-xl bg-white px-3 py-2 text-center text-xs font-bold text-gray-700 shadow-sm">
+                Email
+              </a>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-gray-600">
+              <Link href="/services">Services</Link>
+              <Link href="/portfolio">Work</Link>
+              <Link href="/blog">Blog</Link>
+              <Link href="/careers">Careers</Link>
+              <Link href="/privacy-policy">Privacy</Link>
+            </div>
+
+            <p className="mt-4 text-[0.7rem] font-medium text-gray-400">
+              © {new Date().getFullYear()} Anant Soft Computing
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden md:block">
       <Container>
-        <div className="py-10 pb-28 md:pb-12 lg:py-16">
+        <div className="py-10 md:pb-12 lg:py-16">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8">
               <Link href="/" className="flex items-center">
-                <span className="text-2xl font-bold text-primary">Anant</span>
-                <span className="text-2xl font-light text-gray-800">Soft Computing</span>
+                <ASCLogo markClassName="!w-36 !h-14" />
               </Link>
               <p className="text-gray-600 text-base">
                 Transforming businesses through innovative software solutions and digital excellence.
@@ -138,6 +173,7 @@ const Footer = () => {
           </div>
         </div>
       </Container>
+      </div>
     </footer>
   );
 };

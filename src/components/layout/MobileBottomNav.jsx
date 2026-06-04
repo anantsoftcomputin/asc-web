@@ -18,11 +18,12 @@ import {
   UserRound,
   X,
 } from "lucide-react";
+import ASCLogo from "../common/ASCLogo";
 
 const primaryItems = [
-  { label: "Home", href: "/", icon: Home },
   { label: "Services", href: "/services", icon: BriefcaseBusiness },
   { label: "Work", href: "/portfolio", icon: FolderKanban },
+  { label: "Home", href: "/", icon: Home, center: true },
   { label: "Blog", href: "/blog", icon: Newspaper },
 ];
 
@@ -46,7 +47,7 @@ export default function MobileBottomNav() {
   return (
     <>
       <nav className="mobile-bottom-nav md:hidden" aria-label="Primary mobile navigation">
-        <div className="mx-auto grid h-full max-w-md grid-cols-5 items-center px-2">
+        <div className="mobile-bottom-nav__inner">
           {primaryItems.map((item) => {
             const Icon = item.icon;
             const active = isActivePath(pathname, item.href);
@@ -55,7 +56,7 @@ export default function MobileBottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`mobile-bottom-nav__item ${active ? "mobile-bottom-nav__item--active" : ""}`}
+                className={`mobile-bottom-nav__item ${item.center ? "mobile-bottom-nav__item--center" : ""} ${active ? "mobile-bottom-nav__item--active" : ""}`}
               >
                 <Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 2} />
                 <span>{item.label}</span>
@@ -96,11 +97,9 @@ export default function MobileBottomNav() {
             >
               <div className="mx-auto max-w-md">
                 <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-600">
-                      AnantSoft
-                    </p>
-                    <h2 className="text-lg font-semibold text-gray-950">More options</h2>
+                  <div className="min-w-0">
+                    <ASCLogo markClassName="!w-28 !h-11" />
+                    <h2 className="mt-2 text-lg font-semibold text-gray-950">More options</h2>
                   </div>
                   <button
                     type="button"

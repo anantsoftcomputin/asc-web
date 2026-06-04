@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Container } from '../common'
+import ASCLogo from '../common/ASCLogo'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -115,19 +116,9 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo */}
           <Link href="/" className="flex min-w-0 flex-shrink-0 items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white shadow-sm md:h-auto md:w-auto md:px-4 md:py-2"
-            >
-              <span className="text-base font-bold md:text-2xl">
-                <span className="md:hidden">A</span>
-                <span className="hidden md:inline">Anant</span>
-              </span>
-            </motion.div>
-            <span className="truncate text-lg font-semibold tracking-tight text-gray-950 md:text-2xl md:font-light md:bg-gradient-to-r md:from-gray-600 md:to-gray-900 md:bg-clip-text md:text-transparent">
-              <span className="sm:hidden">AnantSoft</span>
-              <span className="hidden sm:inline">Soft Computing</span>
-            </span>
+            <motion.span whileHover={{ scale: 1.03 }} className="inline-flex">
+              <ASCLogo />
+            </motion.span>
           </Link>
 
           {/* Desktop Navigation */}
