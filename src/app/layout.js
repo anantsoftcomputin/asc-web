@@ -15,11 +15,15 @@ export const metadata = {
     'custom software development', 'CRM development', 'ERP development',
     'mobile app development', 'SEO services', 'IT consulting',
     'software company Vadodara', 'software development India',
-    'AnantSoftComputing', 'Anant Soft Computing'
+    'AnantSoftComputing', 'Anant Soft Computing',
+    'software development Gujarat', 'web application development India',
+    'digital transformation India', 'business software solutions',
   ],
   authors: [{ name: 'AnantSoftComputing', url: BASE_URL }],
   creator: 'AnantSoftComputing',
   publisher: 'AnantSoftComputing',
+  category: 'Technology',
+  classification: 'Software Development, IT Services',
   robots: {
     index: true,
     follow: true,

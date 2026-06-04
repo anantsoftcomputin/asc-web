@@ -34,26 +34,37 @@ export async function generateMetadata({ params }) {
   return {
     title: `${post.title} | AnantSoftComputing`,
     description: post.excerpt,
+    keywords: [
+      ...(post.tags || []),
+      post.category || 'Technology',
+      'AnantSoftComputing blog',
+      'software development India',
+    ],
+    authors: [{ name: post.author?.name || 'AnantSoftComputing' }],
     alternates: {
       canonical: `https://anantsoft.com/blog/${slug}`,
     },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: post.thumbnail ? [{ url: post.thumbnail, alt: post.title }] : undefined,
+      images: post.thumbnail
+        ? [{ url: post.thumbnail, width: 1200, height: 630, alt: post.title }]
+        : [{ url: '/og-default.png', width: 1200, height: 630, alt: post.title }],
       type: "article",
       publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt,
+      modifiedTime: post.updatedAt || post.publishedAt,
       authors: [post.author?.name || 'AnantSoftComputing'],
       section: post.category || 'Technology',
       tags: post.tags || [],
       url: `https://anantsoft.com/blog/${slug}`,
+      siteName: 'AnantSoftComputing',
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: post.thumbnail ? [post.thumbnail] : undefined,
+      images: post.thumbnail ? [post.thumbnail] : ['/og-default.png'],
+      creator: '@AnantSoftComp',
     },
   };
 }
@@ -79,28 +90,37 @@ export default async function BlogPostPage({ params }) {
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.excerpt,
-    "image": post.thumbnail || undefined,
+    "image": post.thumbnail
+      ? { "@type": "ImageObject", "url": post.thumbnail, "width": 1200, "height": 630 }
+      : { "@type": "ImageObject", "url": "https://anantsoft.com/og-default.png", "width": 1200, "height": 630 },
     "datePublished": post.publishedAt,
     "dateModified": post.updatedAt || post.publishedAt,
     "author": {
       "@type": "Person",
-      "name": post.author?.name || "AnantSoftComputing Team"
+      "name": post.author?.name || "AnantSoftComputing Team",
+      "url": "https://anantsoft.com/about",
     },
     "publisher": { "@id": "https://anantsoft.com/#organization" },
     "url": `https://anantsoft.com/blog/${slug}`,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://anantsoft.com/blog/${slug}`
+      "@id": `https://anantsoft.com/blog/${slug}`,
     },
     "articleSection": post.category || "Technology",
+    "keywords": post.tags?.join(", ") || post.category || "software development",
+    "inLanguage": "en-IN",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", "h2", ".prose p:first-of-type"],
+    },
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://anantsoft.com" },
         { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://anantsoft.com/blog" },
-        { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://anantsoft.com/blog/${slug}` }
-      ]
-    }
+        { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://anantsoft.com/blog/${slug}` },
+      ],
+    },
   };
 
   return (
