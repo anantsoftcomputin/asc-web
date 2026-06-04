@@ -9,6 +9,7 @@ import { Container, Button, Card, Badge } from "../../components/common";
 import { CTA } from "../../components/sections";
 import CareerApplyForm from "../../components/sections/CareerApplyForm";
 import { jobAPI } from "../../lib/firebase-admin";
+import MobileCareersPage from "./MobileCareersPage";
 
 import {
   FaBriefcase,
@@ -96,12 +97,14 @@ export default function CareersPage() {
     );
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="pt-20"
-    >
+    <>
+      <MobileCareersPage />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="pt-20 hidden md:block"
+      >
       {/* Hero */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50">
         <div className="absolute inset-0">
@@ -369,110 +372,82 @@ export default function CareersPage() {
             </p>
           </div>
 
-          <div className="max-w-5xl mx-auto">
-            <div className="relative">
-              {/* Vertical line */}
+          <div className="max-w-3xl mx-auto">
+            {/* Mobile: simple stacked steps. Desktop: zigzag timeline */}
+            <div className="flex flex-col gap-6 md:hidden">
+              {[
+                { emoji: "📝", time: "1-2 days", title: "Application Review", desc: "Initial screening of your application and resume" },
+                { emoji: "💻", time: "3-5 days", title: "Technical Assessment", desc: "Skills evaluation through practical assignments" },
+                { emoji: "👥", time: "1 day", title: "Team Interview", desc: "Discussion with potential team members" },
+                { emoji: "🎉", time: "1-2 days", title: "Final Discussion", desc: "Offer discussion and documentation" },
+              ].map((step, i) => (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex gap-4 items-start"
+                >
+                  <div className="flex-shrink-0 w-10 h-10 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-lg shadow">
+                    {step.emoji}
+                  </div>
+                  <div className="flex-1 rounded-2xl shadow-md border border-gray-100 bg-white p-5">
+                    <span className="inline-flex items-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-xs mb-2">
+                      {step.time}
+                    </span>
+                    <h3 className="text-lg font-semibold mb-1">{step.title}</h3>
+                    <p className="text-gray-600 text-sm">{step.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Desktop zigzag */}
+            <div className="relative hidden md:block">
               <div className="absolute top-0 left-1/2 w-0.5 h-full bg-primary-100 transform -translate-x-1/2" />
 
-              {/* Step 1 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative mb-12 ml-[50%] pl-8"
-              >
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative mb-12 ml-[50%] pl-8">
                 <div className="absolute top-0 left-0 w-8 h-8 bg-white border-4 border-primary-500 rounded-full transform -translate-y-1/2 -translate-x-1/2">
-                  <span className="absolute inset-0 flex items-center justify-center text-lg">
-                    📝
-                  </span>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">📝</span>
                 </div>
-
                 <div className="rounded-2xl shadow-lg shadow-gray-200/40 border border-gray-100 bg-white hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 p-6">
-                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">
-                    1-2 days
-                  </span>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Application Review
-                  </h3>
-                  <p className="text-gray-600">
-                    Initial screening of your application and resume
-                  </p>
+                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">1-2 days</span>
+                  <h3 className="text-xl font-semibold mb-2">Application Review</h3>
+                  <p className="text-gray-600">Initial screening of your application and resume</p>
                 </div>
               </motion.div>
 
-              {/* Step 2 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative mb-12 mr-[50%] pr-8 text-right"
-              >
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative mb-12 mr-[50%] pr-8 text-right">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-white border-4 border-primary-500 rounded-full transform -translate-y-1/2 translate-x-1/2">
-                  <span className="absolute inset-0 flex items-center justify-center text-lg">
-                    💻
-                  </span>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">💻</span>
                 </div>
-
                 <div className="rounded-2xl shadow-lg shadow-gray-200/40 border border-gray-100 bg-white hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col items-end">
-                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">
-                    3-5 days
-                  </span>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Technical Assessment
-                  </h3>
-                  <p className="text-gray-600">
-                    Skills evaluation through practical assignments
-                  </p>
+                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">3-5 days</span>
+                  <h3 className="text-xl font-semibold mb-2">Technical Assessment</h3>
+                  <p className="text-gray-600">Skills evaluation through practical assignments</p>
                 </div>
               </motion.div>
 
-              {/* Step 3 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative mb-12 ml-[50%] pl-8"
-              >
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative mb-12 ml-[50%] pl-8">
                 <div className="absolute top-0 left-0 w-8 h-8 bg-white border-4 border-primary-500 rounded-full transform -translate-y-1/2 -translate-x-1/2">
-                  <span className="absolute inset-0 flex items-center justify-center text-lg">
-                    👥
-                  </span>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">👥</span>
                 </div>
-
                 <div className="rounded-2xl shadow-lg shadow-gray-200/40 border border-gray-100 bg-white hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 p-6">
-                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">
-                    1 day
-                  </span>
+                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">1 day</span>
                   <h3 className="text-xl font-semibold mb-2">Team Interview</h3>
-                  <p className="text-gray-600">
-                    Discussion with potential team members
-                  </p>
+                  <p className="text-gray-600">Discussion with potential team members</p>
                 </div>
               </motion.div>
 
-              {/* Step 4 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative mb-12 mr-[50%] pr-8 text-right"
-              >
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative mb-12 mr-[50%] pr-8 text-right">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-white border-4 border-primary-500 rounded-full transform -translate-y-1/2 translate-x-1/2">
-                  <span className="absolute inset-0 flex items-center justify-center text-lg">
-                    🎉
-                  </span>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">🎉</span>
                 </div>
-
                 <div className="rounded-2xl shadow-lg shadow-gray-200/40 border border-gray-100 bg-white hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col items-end">
-                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">
-                    1-2 days
-                  </span>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Final Discussion
-                  </h3>
-                  <p className="text-gray-600">
-                    Offer discussion and documentation
-                  </p>
+                  <span className="inline-flex items-center justify-center font-medium rounded-full bg-primary/10 text-primary px-2.5 py-1 text-sm mb-2">1-2 days</span>
+                  <h3 className="text-xl font-semibold mb-2">Final Discussion</h3>
+                  <p className="text-gray-600">Offer discussion and documentation</p>
                 </div>
               </motion.div>
             </div>
@@ -482,5 +457,6 @@ export default function CareersPage() {
 
       <CTA />
     </motion.div>
+    </>
   );
 }

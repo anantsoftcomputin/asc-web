@@ -21,6 +21,7 @@ import {
   FaHandshake,
 } from "react-icons/fa";
 import Link from "next/link";
+import MobileServicesPage from "./MobileServicesPage";
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -317,11 +318,14 @@ const Services = () => {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <>
+      <MobileServicesPage />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="hidden md:block"
+      >
       <section className="relative min-h-[60vh] overflow-hidden bg-gradient-to-b from-primary-100 via-white to-secondary-100">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 -left-4 w-96 h-96 bg-primary-200/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
@@ -488,7 +492,7 @@ const Services = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 p-8 text-white">
+              <div className="rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 p-8 text-white">
                 <h3 className="text-2xl font-bold mb-6">Industries We Serve</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {industries.map((industry, index) => (
@@ -797,6 +801,7 @@ const Services = () => {
 
       <CTA />
     </motion.div>
+    </>
   );
 };
 

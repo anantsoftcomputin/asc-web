@@ -6,6 +6,7 @@ import { CTA } from '../../../components/sections';
 import { FaSearch, FaChartLine, FaTools, FaCogs, FaRocket } from 'react-icons/fa';
 import Image from 'next/image';
 import BlogCarousel from '../../../components/sections/BlogCarousel';
+import MobileSEOPage from './MobileSEOPage';
 
 const SEOService = () => {
   const { scrollY } = useScroll();
@@ -58,12 +59,14 @@ const SEOService = () => {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="pt-20"
-    >
+    <>
+      <MobileSEOPage />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="pt-20 hidden md:block"
+      >
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary-50 via-white to-secondary-50">
         {/* Animated Background */}
@@ -307,6 +310,7 @@ const SEOService = () => {
 
       <CTA />
     </motion.div>
+    </>
   );
 };
 

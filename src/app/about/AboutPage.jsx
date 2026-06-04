@@ -1,4 +1,4 @@
-'use client' 
+'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -15,6 +15,7 @@ import { Stats, CTA } from '../../components/sections'
 import { teamAPI } from '../../lib/firebase-admin'
 import { isUnavailableImageSrc } from '../../lib/image-utils'
 import Image from 'next/image'
+import MobileAboutPage from './MobileAboutPage'
 
 export default function AboutPage() {
   const [teamMembers, setTeamMembers] = useState([])
@@ -72,11 +73,14 @@ export default function AboutPage() {
 
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <>
+      <MobileAboutPage />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="hidden md:block"
+      >
       {/* Hero Section */}
       <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-b from-primary-100 via-white to-secondary-100">
         {/* Animated background blobs */}
@@ -346,5 +350,6 @@ export default function AboutPage() {
       <Stats />
       <CTA />
     </motion.div>
+    </>
   )
 }
