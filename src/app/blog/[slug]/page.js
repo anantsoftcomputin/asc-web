@@ -5,16 +5,34 @@ import { Card } from "../../../components/common";
 import JsonLd from "../../../components/common/JsonLd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { getGrowthBlogPost, growthBlogPosts } from "../../../lib/growth-blog-posts";
 
 
 // This tells Next.js which pages to pre-render
 export async function generateStaticParams() {
-  const result = await blogAPI.getAll();
-  if (!result.success) return [];
+  let firestorePosts = [];
+  try {
+    const result = await blogAPI.getAll();
+    if (result.success) firestorePosts = result.data;
+  } catch (_e) {
+    firestorePosts = [];
+  }
   
-  return result.data.map((post) => ({
-    slug: post.slug
-  }));
+  const slugs = new Set([
+    ...growthBlogPosts.map((post) => post.slug),
+    ...firestorePosts.map((post) => post.slug).filter(Boolean),
+  ]);
+
+  return Array.from(slugs).map((slug) => ({ slug }));
+}
+
+async function getPost(slug) {
+  const fallbackPost = getGrowthBlogPost(slug);
+  if (fallbackPost) return fallbackPost;
+
+  const result = await blogAPI.getBySlug(slug);
+  if (!result.success || !result.data) return null;
+  return result.data;
 }
 
 
@@ -24,12 +42,8 @@ export async function generateMetadata({ params }) {
     ? resolvedParams.slug.join("/")
     : resolvedParams.slug;
 
-  const result = await blogAPI.getBySlug(slug);
-  if (!result.success || !result.data) {
-    notFound();
-  }
-
-  const post = result.data;
+  const post = await getPost(slug);
+  if (!post) notFound();
 
   return {
     title: `${post.title} | AnantSoftComputing`,
@@ -75,15 +89,8 @@ export default async function BlogPostPage({ params }) {
     ? resolvedParams.slug.join("/")
     : resolvedParams.slug;
 
-  const result = await blogAPI.getBySlug(slug);
-  if (!result.success || !result.data) {
-    notFound();
-  }
-
-  const post = result.data;
-  if (!post) {
-    notFound();
-  }
+  const post = await getPost(slug);
+  if (!post) notFound();
 
   const articleSchema = {
     "@context": "https://schema.org",

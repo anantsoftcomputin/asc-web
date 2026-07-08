@@ -17,22 +17,44 @@ import { isUnavailableImageSrc } from '../../lib/image-utils'
 import Image from 'next/image'
 import MobileAboutPage from './MobileAboutPage'
 
+const fallbackTeamMembers = [
+  {
+    id: 'leadership-strategy',
+    name: 'AnantSoftComputing Leadership',
+    role: 'Business Growth & Solution Strategy',
+    bio: 'Guiding CRM, ERP, website, SEO, mobile app, and automation projects for businesses that need measurable growth.',
+    image: '',
+  },
+  {
+    id: 'engineering-team',
+    name: 'Engineering Team',
+    role: 'Custom Software Development',
+    bio: 'Designing and building secure, maintainable systems for healthcare, education, NGOs, franchises, and small businesses.',
+    image: '',
+  },
+  {
+    id: 'growth-team',
+    name: 'Digital Growth Team',
+    role: 'SEO, Analytics & Conversion',
+    bio: 'Helping clients turn search traffic, website enquiries, WhatsApp conversations, and CRM follow-ups into stronger lead flow.',
+    image: '',
+  },
+]
+
 export default function AboutPage() {
-  const [teamMembers, setTeamMembers] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [teamMembers, setTeamMembers] = useState(fallbackTeamMembers)
 
   useEffect(() => {
-    loadTeam()
-  }, [])
-
-  const loadTeam = async () => {
-    setLoading(true)
-    const result = await teamAPI.getAll()
-    if (result.success) {
-      setTeamMembers(result.data)
+    let mounted = true
+    teamAPI.getAll().then((result) => {
+      if (mounted && result.success && result.data.length > 0) {
+        setTeamMembers(result.data)
+      }
+    })
+    return () => {
+      mounted = false
     }
-    setLoading(false)
-  }
+  }, [])
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
@@ -300,16 +322,7 @@ export default function AboutPage() {
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {loading ? (
-              <div className="col-span-full text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading team members...</p>
-              </div>
-            ) : teamMembers.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-600">No team members found</p>
-              </div>
-            ) : (
+            {(
               teamMembers.map((member, index) => (
                 <motion.div
                   key={member.id}

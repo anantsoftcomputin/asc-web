@@ -3,21 +3,16 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 
 const DEFAULT_TAGS = [
-  "Appointment Booking System",
-  "Patient Management System",
-  "Website For Doctors and Hospitals",
-  "Learning Management System",
-  "Attendance Tracking",
-  "Website for Schools and Universities",
+  "Healthcare Solutions",
+  "Clinic Management Software",
+  "Pet Clinic Software",
   "Education CRM",
-  "Alumni Management System",
-  "SEO",
-  "Chatbot Development and Training",
-  "Payment Gateway Integration",
-  "Event Management Portal",
-  "Loyalty Management System",
-  "CRM",
-  "Website",
+  "Business Growth CRM",
+  "SEO Services in Vadodara",
+  "AI Chatbot Development",
+  "NGO Management Software",
+  "Franchise Portal Development",
+  "Custom ERP for Small Businesses",
 ];
 
 /**

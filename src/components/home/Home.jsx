@@ -16,6 +16,9 @@ import {
 import HorizontalTagsMarquee from '../sections/HorizontalTagsMarquee'
 import ProjectsGrid from '../sections/ProjectsGrid'
 import MobileHomeExperience from './MobileHomeExperience'
+import ServiceClusters from '../sections/ServiceClusters'
+import FreeAudit from '../sections/FreeAudit'
+import PricingStarts from '../sections/PricingStarts'
 
 export default function Home() {
   
@@ -36,9 +39,12 @@ export default function Home() {
         <Hero />
         <HorizontalTagsMarquee />
         <Services />
+        <ServiceClusters />
+        <FreeAudit />
         <Features />
         {/* <Portfolio /> */}
         <ProjectsGrid />
+        <PricingStarts />
         <Stats />
         <Testimonials />
         <CTA />

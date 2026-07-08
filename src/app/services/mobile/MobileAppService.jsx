@@ -430,25 +430,25 @@ const MobileAppService = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                name: "Sarah Johnson",
-                role: "CEO",
-                company: "HealthTech Solutions",
+                name: "Healthcare Client",
+                role: "Operations Team",
+                company: "Hospital & Clinic App",
                 image: "",
-                quote: "The team delivered an exceptional healthcare app that exceeded our expectations."
+                quote: "The mobile workflow made appointments, patient communication, and internal coordination much easier for our team."
               },
               {
-                name: "Michael Chen",
-                role: "Product Manager",
-                company: "EduTech Inc",
+                name: "Education Client",
+                role: "Management Team",
+                company: "Coaching & LMS Platform",
                 image: "",
-                quote: "Outstanding development process and excellent communication throughout."
+                quote: "The team understood our student journey and built a practical platform for classes, records, and communication."
               },
               {
-                name: "Amanda Smith",
+                name: "Business Client",
                 role: "Founder",
-                company: "FinanceFlow",
+                company: "Service Marketplace",
                 image: "",
-                quote: "Their expertise in fintech app development is truly remarkable."
+                quote: "The app gave us a scalable way to manage users, bookings, notifications, and day-to-day marketplace operations."
               }
             ].map((testimonial, index) => (
               <motion.div

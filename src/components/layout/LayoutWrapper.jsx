@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Navbar, Footer } from './index';
 import MobileBottomNav from './MobileBottomNav';
 import PWAInstallPrompt from '../common/PWAInstallPrompt';
+import StickyWhatsApp from '../common/StickyWhatsApp';
 
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export default function LayoutWrapper({ children }) {
         {children}
       </main>
       {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <StickyWhatsApp />}
       {!isAdminRoute && <MobileBottomNav />}
       {!isAdminRoute && <PWAInstallPrompt />}
     </>

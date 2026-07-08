@@ -6,6 +6,7 @@ import { useCallback, useState, useEffect, useMemo } from "react";
 import { Search, ArrowUp } from "lucide-react";
 import { blogAPI } from "../../lib/firebase-admin";
 import { isUnavailableImageSrc } from "../../lib/image-utils";
+import { growthBlogPosts } from "../../lib/growth-blog-posts";
 
 const PRODUCTION_CATEGORIES = [
   "All",
@@ -28,8 +29,14 @@ export default function BlogPage() {
 
   const loadBlogs = useCallback(async () => {
     const result = await blogAPI.getAll();
-    if (result.success) {
-      setBlogPosts(result.data);
+    if (result.success && result.data.length > 0) {
+      const existingSlugs = new Set(result.data.map((post) => post.slug));
+      setBlogPosts([
+        ...growthBlogPosts.filter((post) => !existingSlugs.has(post.slug)),
+        ...result.data,
+      ]);
+    } else {
+      setBlogPosts(growthBlogPosts);
     }
     setLoading(false);
   }, []);
