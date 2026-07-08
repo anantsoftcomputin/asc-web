@@ -542,6 +542,38 @@ Results:
 - 1,200+ volunteers registered through the portal
 - Top 3 search ranking for several NGO-related Gujarat terms
 
+### Gazra.org
+
+External URL: https://gazra.org
+
+Project type: Community website, NGO-style public website, responsive web design, resource discovery
+
+Summary:
+
+- Public website for Project Gazra, built to present the initiative, community programs, support resources, events, gallery, and participation paths
+- Designed for trust, accessibility, mobile-first browsing, and clear discovery of community resources
+- Included in the AnantSoftComputing portfolio as an example of community and non-profit website development
+
+Features:
+
+- Mission and initiative pages
+- Event and gallery sections
+- Support resource discovery
+- Volunteer and community engagement paths
+- SEO-friendly responsive website structure
+
+Tech stack:
+
+- React
+- Responsive web design
+- SEO-oriented content architecture
+
+Results:
+
+- Central digital presence for Project Gazra
+- Improved access to community information and resources
+- Mobile-friendly website for awareness, events, and engagement
+
 ### ESPI CRM
 
 URL: https://anantsoft.com/case-studies/espi-crm
@@ -765,4 +797,3 @@ Users can contact AnantSoftComputing through https://anantsoft.com/contact, by p
 - https://anantsoft.com/portfolio
 - https://anantsoft.com/blog
 - https://anantsoft.com/contact
-

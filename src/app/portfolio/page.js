@@ -16,6 +16,7 @@ export const metadata = {
     'healthcare software portfolio',
     'petcare marketplace development',
     'NGO software case study',
+    'Gazra website development',
     'franchise management software India',
     'custom software examples India',
   ],
@@ -59,7 +60,7 @@ const portfolioItemListSchema = {
   "name": "AnantSoftComputing Software Project Portfolio",
   "description": "Case studies of software projects delivered by AnantSoftComputing across CRM, education, healthcare, NGO, petcare, and enterprise sectors.",
   "url": "https://anantsoft.com/portfolio",
-  "numberOfItems": 10,
+  "numberOfItems": 11,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -175,6 +176,18 @@ const portfolioItemListSchema = {
         "url": "https://studystreak.com",
         "creator": { "@id": "https://anantsoft.com/#organization" },
         "keywords": ["study app", "NodeJS", "Python", "ReactJS", "AI education"],
+      },
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "item": {
+        "@type": "CreativeWork",
+        "name": "Gazra.org – Community Website",
+        "description": "Responsive community website for Project Gazra with initiative pages, support resources, events, gallery, and volunteer engagement paths.",
+        "url": "https://gazra.org",
+        "creator": { "@id": "https://anantsoft.com/#organization" },
+        "keywords": ["community website", "NGO website", "ReactJS", "SEO", "responsive web design"],
       },
     },
   ],

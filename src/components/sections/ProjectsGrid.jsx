@@ -7,7 +7,28 @@ import { FaTimes, FaGlobe, FaGithub } from "react-icons/fa";
 import { projectAPI } from "../../lib/firebase-admin";
 import { isUnavailableImageSrc } from "../../lib/image-utils";
 
+const GAZRA_PROJECT = {
+  id: "fp-gazra",
+  title: "Gazra.org",
+  category: "ngo",
+  image: "/assets/images/blog/google-business-profile-local-seo.jpg",
+  shortDesc: "Inclusive community website for Project Gazra",
+  fullDesc: "A community-focused website for Project Gazra, presenting initiatives, support pathways, events, gallery, resources, and volunteer engagement.",
+  detailedDesc: "Anant Soft Computing built Gazra.org as a trust-first public website for Project Gazra, helping visitors understand the mission, explore initiatives, access support resources, and participate through events and community programs.",
+  technologies: ["ReactJs", "Responsive Web", "SEO"],
+  features: ["Mission & Initiative Pages", "Events & Gallery", "Support Resources", "Volunteer Engagement", "Mobile-First Website"],
+  results: ["Central digital presence for Project Gazra", "Improved access to community resources", "Mobile-friendly public website"],
+  links: { live: "https://gazra.org", github: null },
+  stats: { website: "Live", focus: "Community", uptime: "99.9%" },
+  gradient: "from-teal-400 to-emerald-600",
+  problemStatement: "Project Gazra needed a public website that clearly explained its mission, initiatives, support pathways, and community programs.",
+  ourApproach: "We structured the site around trust, accessibility, and easy discovery so visitors could quickly understand the initiative and find the right resources or participation path.",
+  solutionDelivered: "We delivered a responsive website with initiative pages, event and gallery sections, resource-focused content, and clear calls to connect with the community.",
+  caseStudyOutcome: "Gazra.org now gives Project Gazra a central digital presence for awareness, resources, events, and community engagement.",
+};
+
 const FALLBACK_PROJECTS = [
+  GAZRA_PROJECT,
   {
     id: "fp-1", title: "Pawppy.in", category: "petcare",
     image: "/assets/images/blog/pet-clinic-management-software.jpg",
@@ -158,6 +179,16 @@ function normalizeProject(doc) {
   };
 }
 
+function ensureGazraProject(projects) {
+  const hasGazra = projects.some((project) => {
+    const title = (project.title || "").toLowerCase();
+    const liveUrl = (project.links?.live || "").toLowerCase();
+    return title.includes("gazra") || liveUrl.includes("gazra.org");
+  });
+
+  return hasGazra ? projects : [GAZRA_PROJECT, ...projects];
+}
+
 function ProjectImage({ src, alt, gradient, className }) {
   const [errored, setErrored] = useState(false);
   if (isUnavailableImageSrc(src) || errored) return <div className={`bg-gradient-to-br ${gradient} w-full h-full`} />;
@@ -226,12 +257,12 @@ export default function PortfolioGrid() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
   const [modalTab, setModalTab] = useState('overview');
-  const [projects, setProjects] = useState(FALLBACK_PROJECTS);
+  const [projects, setProjects] = useState(() => ensureGazraProject(FALLBACK_PROJECTS));
 
   useEffect(() => {
     projectAPI.getAll().then(result => {
       if (result.success && result.data.length > 0) {
-        setProjects(result.data.map(normalizeProject));
+        setProjects(ensureGazraProject(result.data.map(normalizeProject)));
       }
     });
   }, []);
