@@ -1,6 +1,39 @@
 import { projectAPI } from './firebase-admin';
 
 export const ALL_PROJECTS = [
+  {
+    title: "Gazra.org",
+    category: "ngo",
+    image: "https://anantsoft.com/assets/images/blog/google-business-profile-local-seo.jpg",
+    gradient: "from-teal-400 to-emerald-600",
+    shortDesc: "Inclusive community website for Project Gazra",
+    fullDesc: "Gazra.org is a community-focused website for Project Gazra, presenting initiatives, support pathways, events, gallery, resources, and volunteer engagement in a clear, mobile-friendly experience.",
+    detailedDesc: "Anant Soft Computing built Gazra.org as a trust-first public website for Project Gazra, helping visitors understand the mission, explore initiatives, access support resources, and participate through events and community programs.",
+    technologies: ["React", "Responsive Web Design", "SEO"],
+    features: [
+      "Mission and initiative pages",
+      "Event and gallery sections",
+      "Support resource discovery",
+      "Volunteer and community engagement paths",
+      "SEO-friendly responsive website structure",
+      "Mobile-first public website experience",
+    ],
+    results: [
+      "Central digital presence for Project Gazra",
+      "Improved access to community information and resources",
+      "Mobile-friendly website for awareness, events, and engagement",
+    ],
+    liveLink: "https://gazra.org",
+    githubLink: "",
+    stat1Label: "Website", stat1Value: "Live",
+    stat2Label: "Focus", stat2Value: "Community",
+    stat3Label: "Experience", stat3Value: "Mobile-First",
+    problemStatement: "Project Gazra needed a public website that clearly explained its mission, initiatives, support pathways, and community programs. Visitors needed a simple way to understand the work, explore resources, and find the right participation path without confusion.",
+    ourApproach: "We structured the website around trust, accessibility, and easy discovery. The content flow helps visitors quickly understand Project Gazra, move through initiative and resource sections, and connect with events or community engagement opportunities from any device.",
+    solutionDelivered: "We delivered a responsive public website with initiative pages, event and gallery sections, resource-focused content, and clear calls to connect with the community. The build is designed for fast mobile browsing and straightforward discovery by users and search engines.",
+    caseStudyOutcome: "Gazra.org now gives Project Gazra a central digital presence for awareness, resources, events, and community engagement. The website acts as a clear front door for people who want to learn, participate, or connect with the initiative.",
+    featured: false,
+  },
     {
     title: "iversity.in",
     category: "education",
