@@ -37,10 +37,10 @@ export default function Home() {
       <MobileHomeExperience />
       <div className="hidden md:block">
         <Hero />
+        <FreeAudit />
         <HorizontalTagsMarquee />
         <Services />
         <ServiceClusters />
-        <FreeAudit />
         <Features />
         {/* <Portfolio /> */}
         <ProjectsGrid />

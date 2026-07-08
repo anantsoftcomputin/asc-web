@@ -103,6 +103,27 @@ export default async function CaseStudyPage({ params }) {
             </ul>
           </div>
         </section>
+
+        {study.screenshots?.length > 0 && (
+          <section className="bg-gray-50 py-16">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+              <h2 className="text-3xl font-bold text-gray-900">Screenshots & Product Views</h2>
+              <p className="mt-3 max-w-3xl text-gray-600">
+                Text-accessible walkthrough of the key screens and workflows created for this project.
+              </p>
+              <div className="mt-8 grid gap-5 md:grid-cols-3">
+                {study.screenshots.map((screenshot, index) => (
+                  <div key={screenshot} className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+                    <div className="mb-4 flex h-32 items-center justify-center rounded-lg bg-gradient-to-br from-primary-50 to-secondary-50 text-3xl font-bold text-primary-200">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <p className="text-gray-700">{screenshot}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
     </>
   );

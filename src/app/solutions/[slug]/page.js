@@ -99,10 +99,28 @@ export default async function SolutionPage({ params }) {
       ],
     },
   };
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${url}#software`,
+    name: page.title,
+    description: page.description,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web, Android, iOS",
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      description: page.price,
+    },
+    provider: { "@id": `${BASE_URL}/#organization` },
+    featureList: page.features,
+    audience: page.audience.map((name) => ({ "@type": "Audience", name })),
+  };
 
   return (
     <>
       <JsonLd data={schema} />
+      <JsonLd data={softwareSchema} />
       <main className="bg-gray-50 pt-24">
         <section className="bg-white">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-24">
