@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Container } from '../common'
 import ASCLogo from '../common/ASCLogo'
+import { solutionNavLinks } from '../../lib/site-links'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,6 +25,7 @@ const Navbar = () => {
         { name: 'CRM Development', path: '/services/crm' },
         { name: 'Mobile Apps', path: '/services/mobile' },
         { name: 'Custom Solutions', path: '/services/custom' },
+        ...solutionNavLinks.slice(0, 6).map((item) => ({ name: item.name, path: item.href })),
       ],
     },
     { name: 'Portfolio', path: '/portfolio' },
@@ -84,7 +86,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute left-0 mt-2 w-48 rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden z-30"
+                className="absolute left-0 mt-2 w-72 rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden z-30"
               >
                 <div className="py-2">
                   {item.dropdown.map((dropItem) => (

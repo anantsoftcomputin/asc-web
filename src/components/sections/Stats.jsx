@@ -4,11 +4,12 @@
 import { useEffect, useRef } from 'react';
 import { motion, useInView, useAnimation } from 'framer-motion';
 import { Container } from '../common';
+import { businessStats } from '../../lib/site-links';
 
 const Stats = () => {
   const stats = [
     {
-      value: 150,
+      value: Number.parseInt(businessStats.projects, 10),
       suffix: '+',
       label: 'Projects Completed',
       description: 'Successfully delivered projects across various industries'
@@ -26,7 +27,7 @@ const Stats = () => {
       description: 'Delivering excellence in software development'
     },
     {
-      value: 25,
+      value: Number.parseInt(businessStats.team, 10),
       suffix: '+',
       label: 'Team Members',
       description: 'Skilled professionals at your service'

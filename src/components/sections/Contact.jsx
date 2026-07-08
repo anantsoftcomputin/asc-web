@@ -15,6 +15,7 @@ import {
   FaInstagram
 } from 'react-icons/fa';
 import { contactAPI } from '../../lib/firebase-admin';
+import { contactServiceOptions, localBusinessAddress } from '../../lib/site-links';
 
 const Contact = () => {
   const [formState, setFormState] = useState({
@@ -70,10 +71,9 @@ const Contact = () => {
       icon: <FaMapMarkerAlt />,
       title: 'Visit Us',
       details: [
-        '1C, Satyam Apartment',
-        'Aradhana Society, Vishwas Colony,',
-        'Alkapuri',
-        'Vadodara, Gujarat 390005'
+        localBusinessAddress.line1,
+        localBusinessAddress.line2,
+        localBusinessAddress.cityLine
       ]
     },
     {
@@ -234,11 +234,11 @@ const Contact = () => {
                     className="block w-full rounded-lg border-2 border-gray-200 px-4 py-3 focus:border-primary focus:ring-primary"
                   >
                     <option value="default">Select a Service</option>
-                    <option value="web">Web Development</option>
-                    <option value="mobile">Mobile Development</option>
-                    <option value="crm">CRM Development</option>
-                    <option value="erp">ERP Solutions</option>
-                    <option value="other">Other</option>
+                    {contactServiceOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

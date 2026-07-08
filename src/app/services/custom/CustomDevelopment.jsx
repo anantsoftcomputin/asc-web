@@ -17,6 +17,7 @@ import {
   FaTools
 } from 'react-icons/fa';
 import Image from "next/image";
+import { businessStats } from "../../../lib/site-links";
 
 const CustomDevelopment = () => {
   const { scrollY } = useScroll();
@@ -139,9 +140,9 @@ const CustomDevelopment = () => {
               {/* Achievement Stats */}
               <div className="mobile-stat-grid mt-12 grid grid-cols-3 gap-6 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none">
                 {[
-                  { value: '200+', label: 'Projects Delivered' },
+                  { value: businessStats.projects, label: 'Projects Delivered' },
                   { value: '15+', label: 'Industries Served' },
-                  { value: '98%', label: 'Client Satisfaction' }
+                  { value: businessStats.satisfaction, label: 'Client Satisfaction' }
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-2xl font-bold text-primary-600">{stat.value}</div>

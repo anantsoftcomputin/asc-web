@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Container, Button } from '../common';
 import { useRouter } from 'next/navigation';
 import { FaRocket, FaArrowRight, FaComments } from 'react-icons/fa';
+import { businessStats } from '../../lib/site-links';
 
 const CTA = () => {
   const router = useRouter();
@@ -138,15 +139,15 @@ const CTA = () => {
             >
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">150+</div>
+                  <div className="text-2xl font-bold text-gray-900">{businessStats.projects}</div>
                   <div className="text-sm text-gray-600">Projects Delivered</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">50+</div>
+                  <div className="text-2xl font-bold text-gray-900">{businessStats.clients}</div>
                   <div className="text-sm text-gray-600">Happy Clients</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">10+</div>
+                  <div className="text-2xl font-bold text-gray-900">{businessStats.years}</div>
                   <div className="text-sm text-gray-600">Years Experience</div>
                 </div>
                 <div>

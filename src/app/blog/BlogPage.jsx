@@ -17,8 +17,8 @@ const PRODUCTION_CATEGORIES = [
 ];
 
 export default function BlogPage() {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [blogPosts, setBlogPosts] = useState(growthBlogPosts);
+  const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -28,21 +28,25 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const loadBlogs = useCallback(async () => {
-    const result = await blogAPI.getAll();
-    if (result.success && result.data.length > 0) {
-      const existingSlugs = new Set(result.data.map((post) => post.slug));
-      setBlogPosts([
-        ...growthBlogPosts.filter((post) => !existingSlugs.has(post.slug)),
-        ...result.data,
-      ]);
-    } else {
+    try {
+      const result = await blogAPI.getAll();
+      if (result.success && result.data.length > 0) {
+        const existingSlugs = new Set(result.data.map((post) => post.slug));
+        setBlogPosts([
+          ...growthBlogPosts.filter((post) => !existingSlugs.has(post.slug)),
+          ...result.data,
+        ]);
+      } else {
+        setBlogPosts(growthBlogPosts);
+      }
+    } catch (_error) {
       setBlogPosts(growthBlogPosts);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadBlogs();
   }, [loadBlogs]);
 

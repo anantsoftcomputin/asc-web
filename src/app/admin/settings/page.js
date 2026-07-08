@@ -12,7 +12,7 @@ export default function SettingsManagement() {
     siteTagline: 'Custom Software Development & IT Services in India',
     contactEmail: 'support@anantsoftcomputing.com',
     contactPhone: '+91-9638544455',
-    address: '1 C Satyam Apartment, Vishwas Colony Alkapuri, Vadodara – 390007, Gujarat, India',
+    address: '1C, Satyam Apartment, Aradhana Society, Vishwas Colony, Alkapuri, Vadodara, Gujarat 390005, India',
     metaTitle: '',
     metaDescription: '',
     metaKeywords: '',

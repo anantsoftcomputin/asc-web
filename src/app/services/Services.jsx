@@ -22,6 +22,7 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 import MobileServicesPage from "./MobileServicesPage";
+import { businessStats } from "../../lib/site-links";
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -300,10 +301,10 @@ const Services = () => {
   ];
 
   const stats = [
-    { number: "98%", label: "Client Satisfaction" },
-    { number: "200+", label: "Projects Completed" },
-    { number: "15+", label: "Years Experience" },
-    { number: "50+", label: "Expert Team Members" },
+    { number: businessStats.satisfaction, label: "Client Satisfaction" },
+    { number: businessStats.projects, label: "Projects Completed" },
+    { number: businessStats.years, label: "Years Experience" },
+    { number: businessStats.team, label: "Expert Team Members" },
   ];
 
   const industries = [

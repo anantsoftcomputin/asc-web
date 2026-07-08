@@ -10,7 +10,7 @@ import { isUnavailableImageSrc } from "../../lib/image-utils";
 const FALLBACK_PROJECTS = [
   {
     id: "fp-1", title: "Pawppy.in", category: "petcare",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_12.01.45PM.webp",
+    image: "/assets/images/blog/pet-clinic-management-software.jpg",
     shortDesc: "Connecting pet owners with trusted care",
     fullDesc: "Pawppy is a platform that connects pet owners with verified pet service providers, offering bookings, vet consultations, and pet essentials.",
     detailedDesc: "Anant Soft Computing built Pawppy.in — a two-sided marketplace that connects pet owners across India with verified, reviewed pet care professionals including sitters, walkers, groomers, and vets.",
@@ -27,7 +27,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: "fp-2", title: "Ikama.in", category: "franchise",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_11.50.41AM.png",
+    image: "/assets/images/blog/custom-vs-ready-made-software.jpg",
     shortDesc: "India's trusted franchise discovery platform",
     fullDesc: "A platform that connects entrepreneurs with verified franchise opportunities through structured listings, investment filters, and direct franchisor contact.",
     detailedDesc: "Anant Soft Computing developed Ikama.in to digitise India's franchise discovery process — bringing hundreds of franchise brands and thousands of aspiring entrepreneurs onto a single, structured platform.",
@@ -44,7 +44,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: "fp-3", title: "OEC CRM", category: "crm",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/oeccrm.webp",
+    image: "/assets/images/blog/crm-stop-losing-leads.jpg",
     shortDesc: "Custom CRM eliminating lead loss across 50+ branches",
     fullDesc: "An enterprise-grade CRM built for OEC — a multi-branch education consultancy — to centralise leads, automate follow-ups, and gain real-time visibility across all branches.",
     detailedDesc: "Anant Soft Computing designed and built a bespoke CRM for OEC Education, replacing a fragmented spreadsheet-and-WhatsApp workflow with a centralised, automated lead management platform serving 50+ branches simultaneously.",
@@ -61,7 +61,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: "fp-4", title: "OEC India", category: "education",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_12.58.47AM.png",
+    image: "/assets/images/blog/education-crm-consultants.jpg",
     shortDesc: "Purpose-built LMS for coaching institutions",
     fullDesc: "A custom learning management system developed for OEC India — enabling seamless online class delivery, attendance tracking, fee management, and student progress monitoring.",
     detailedDesc: "Anant Soft Computing built OEC India's online education platform from scratch — a full-featured LMS designed specifically for the Indian coaching industry, not adapted from generic video conferencing tools.",
@@ -78,7 +78,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: "fp-5", title: "Indraprasth Foundation", category: "ngo",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.04.13AM.png",
+    image: "/assets/images/blog/google-business-profile-local-seo.jpg",
     shortDesc: "Digital transformation for a leading social welfare NGO",
     fullDesc: "A modern NGO website built for Indraprasth Foundation enabling online donations, volunteer registration, impact storytelling, and event management.",
     detailedDesc: "Anant Soft Computing gave Indraprasth Foundation a fully digital presence — transforming how they collect donations, recruit volunteers, and communicate their social impact to the world.",
@@ -95,7 +95,7 @@ const FALLBACK_PROJECTS = [
   },
   {
     id: "fp-6", title: "SMHRI Hospital", category: "healthcare",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.08.15AM.png",
+    image: "/assets/images/blog/hospital-seo-appointments.jpg",
     shortDesc: "Digitising patient acquisition for a multi-specialty hospital",
     fullDesc: "A comprehensive hospital website with online appointment booking, doctor profiles, specialty pages, and patient communication tools — built to drive patient acquisition.",
     detailedDesc: "Anant Soft Computing transformed SMHRI Hospital's patient acquisition model by building a digital-first presence that made it easy for patients to find the right doctor, understand their specialty, and book appointments online.",
@@ -112,6 +112,25 @@ const FALLBACK_PROJECTS = [
   },
 ];
 
+const PROJECT_IMAGE_FALLBACKS = {
+  petcare: "/assets/images/blog/pet-clinic-management-software.jpg",
+  franchise: "/assets/images/blog/custom-vs-ready-made-software.jpg",
+  crm: "/assets/images/blog/crm-stop-losing-leads.jpg",
+  education: "/assets/images/blog/education-crm-consultants.jpg",
+  ngo: "/assets/images/blog/google-business-profile-local-seo.jpg",
+  healthcare: "/assets/images/blog/hospital-seo-appointments.jpg",
+  mobile: "/assets/images/blog/mobile-app-development-cost-india.jpg",
+  web: "/assets/images/blog/website-vs-web-app.jpg",
+  other: "/assets/images/blog/custom-vs-ready-made-software.jpg",
+};
+
+function resolveProjectImage(src, category) {
+  if (!src || src.includes("anantsoftcomputing.com/media/portfolio")) {
+    return PROJECT_IMAGE_FALLBACKS[category] || PROJECT_IMAGE_FALLBACKS.other;
+  }
+  return src;
+}
+
 function normalizeProject(doc) {
   const stats = {};
   if (doc.stat1Label && doc.stat1Value) stats[doc.stat1Label] = doc.stat1Value;
@@ -121,7 +140,7 @@ function normalizeProject(doc) {
     id: doc.id,
     title: doc.title || '',
     category: doc.category || 'other',
-    image: doc.image || '',
+    image: resolveProjectImage(doc.image, doc.category || 'other'),
     gradient: doc.gradient || 'from-primary-400 to-primary-600',
     shortDesc: doc.shortDesc || doc.description || '',
     fullDesc: doc.fullDesc || doc.description || '',

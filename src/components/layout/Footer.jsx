@@ -2,14 +2,12 @@
 import Link from 'next/link'
 import Container from './Container';
 import ASCLogo from '../common/ASCLogo';
+import { localBusinessAddress, solutionNavLinks } from '../../lib/site-links';
 
 const Footer = () => {
   const navigation = {
     solutions: [
-      { name: 'SEO Services', href: '/services#seo' },
-      { name: 'CRM Development', href: '/services#crm' },
-      { name: 'Mobile Apps', href: '/services#mobile' },
-      { name: 'Custom Solutions', href: '/services#custom' },
+      ...solutionNavLinks,
     ],
     company: [
       { name: 'About Us', href: '/about' },
@@ -19,7 +17,7 @@ const Footer = () => {
       { name: 'Privacy Policy', href: '/privacy-policy' },
     ],
     support: [
-      { name: '1 C Satyam Apartment, Vishwas Colony Alkapuri, Vadodara - 390007', href: '#' },
+      { name: localBusinessAddress.full, href: '#' },
       { name: 'Phone: 9638544455', href: '#' },
       { name: 'Email: support@anantsoftcomputing.com', href: '#' },
     ],
@@ -118,7 +116,7 @@ const Footer = () => {
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-base font-semibold text-gray-900">Solutions</h3>
-                  <ul className="mt-4 space-y-4">
+                  <ul className="mt-4 grid grid-cols-1 gap-3">
                     {navigation.solutions.map((item) => (
                       <li key={item.name}>
                         <Link

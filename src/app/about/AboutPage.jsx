@@ -16,6 +16,7 @@ import { teamAPI } from '../../lib/firebase-admin'
 import { isUnavailableImageSrc } from '../../lib/image-utils'
 import Image from 'next/image'
 import MobileAboutPage from './MobileAboutPage'
+import { businessStats } from '../../lib/site-links'
 
 const fallbackTeamMembers = [
   {
@@ -62,10 +63,10 @@ export default function AboutPage() {
   }
 
   const stats = [
-    { value: '10+', label: 'Years Experience' },
-    { value: '250+', label: 'Projects Delivered' },
-    { value: '95%', label: 'Client Satisfaction' },
-    { value: '50+', label: 'Team Members' },
+    { value: businessStats.years, label: 'Years Experience' },
+    { value: businessStats.projects, label: 'Projects Delivered' },
+    { value: businessStats.satisfaction, label: 'Client Satisfaction' },
+    { value: businessStats.team, label: 'Team Members' },
   ]
 
   const values = [

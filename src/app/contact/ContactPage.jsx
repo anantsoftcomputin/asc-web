@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Container, Input, Button, Card } from '../../components/common';
 import { contactAPI } from '../../lib/firebase-admin';
+import { contactServiceOptions, localBusinessAddress } from '../../lib/site-links';
 
 const ContactPage = () => {
   const [formState, setFormState] = useState({
@@ -111,9 +112,9 @@ const ContactPage = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Visit Us</h3>
-                      <p className="text-gray-600 text-sm">1C, Satyam Apartment</p>
-                      <p className="text-gray-600 text-sm">Aradhana Society, Vishwas Colony, Alkapuri</p>
-                      <p className="text-gray-600 text-sm">Vadodara, Gujarat 390005</p>
+                      <p className="text-gray-600 text-sm">{localBusinessAddress.line1}</p>
+                      <p className="text-gray-600 text-sm">{localBusinessAddress.line2}</p>
+                      <p className="text-gray-600 text-sm">{localBusinessAddress.cityLine}</p>
                     </div>
                   </div>
                 </Card>
@@ -331,12 +332,11 @@ const ContactPage = () => {
                       required
                     >
                       <option value="">Select a Service</option>
-                      <option value="2">CRM Development</option>
-                      <option value="5">Custom Development</option>
-                      <option value="6">Digital Strategy</option>
-                      <option value="4">ERP Systems</option>
-                      <option value="3">Mobile Apps</option>
-                      <option value="1">SEO Optimization</option>
+                      {contactServiceOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

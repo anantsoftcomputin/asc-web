@@ -7,6 +7,7 @@ import { FaSearch, FaChartLine, FaTools, FaCogs, FaRocket } from 'react-icons/fa
 import Image from 'next/image';
 import BlogCarousel from '../../../components/sections/BlogCarousel';
 import MobileSEOPage from './MobileSEOPage';
+import { businessStats } from '../../../lib/site-links';
 
 const SEOService = () => {
   const { scrollY } = useScroll();
@@ -117,9 +118,9 @@ const SEOService = () => {
               {/* Key Metrics */}
               <div className="mobile-stat-grid mt-12 grid grid-cols-3 gap-6 md:[&>*]:bg-transparent md:[&>*]:p-0 md:[&>*]:text-center md:[&>*]:shadow-none">
                 {[
-                  { value: '200+', label: 'SEO Projects' },
+                  { value: businessStats.projects, label: 'Projects Delivered' },
                   { value: '85%', label: 'Avg. Traffic Increase' },
-                  { value: '95%', label: 'Client Satisfaction' }
+                  { value: businessStats.satisfaction, label: 'Client Satisfaction' }
                 ].map((metric) => (
                   <div key={metric.label} className="text-center">
                     <div className="text-2xl font-bold text-primary-600">{metric.value}</div>

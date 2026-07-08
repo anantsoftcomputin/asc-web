@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import ASCLogo from "../common/ASCLogo";
+import { businessStats } from "../../lib/site-links";
 
 const services = [
   {
@@ -50,8 +51,8 @@ const services = [
 ];
 
 const proof = [
-  { value: "250+", label: "projects" },
-  { value: "10+", label: "years" },
+  { value: businessStats.projects, label: "projects" },
+  { value: businessStats.years, label: "years" },
   { value: "99.9%", label: "uptime focus" },
 ];
 

@@ -18,13 +18,14 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import { businessStats } from "../../../lib/site-links";
 
 /* ─── data ───────────────────────────────────────────────────────────── */
 
 const keyMetrics = [
-  { value: "200+", label: "SEO projects" },
+  { value: businessStats.projects, label: "Projects delivered" },
   { value: "+85%", label: "Avg. traffic lift" },
-  { value: "95%", label: "Client satisfaction" },
+  { value: businessStats.satisfaction, label: "Client satisfaction" },
 ];
 
 const features = [

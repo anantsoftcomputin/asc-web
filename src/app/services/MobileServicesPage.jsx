@@ -22,14 +22,15 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { businessStats } from "../../lib/site-links";
 
 /* ─── data ──────────────────────────────────────────────────────────────── */
 
 const stats = [
-  { value: "98%", label: "Client satisfaction" },
-  { value: "250+", label: "Projects delivered" },
-  { value: "15+", label: "Years experience" },
-  { value: "50+", label: "Expert team members" },
+  { value: businessStats.satisfaction, label: "Client satisfaction" },
+  { value: businessStats.projects, label: "Projects delivered" },
+  { value: businessStats.years, label: "Years experience" },
+  { value: businessStats.team, label: "Expert team members" },
 ];
 
 const services = [

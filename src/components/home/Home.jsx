@@ -13,7 +13,6 @@ import {
   Contact
 } from '../sections'  
 
-import HorizontalTagsMarquee from '../sections/HorizontalTagsMarquee'
 import ProjectsGrid from '../sections/ProjectsGrid'
 import MobileHomeExperience from './MobileHomeExperience'
 import ServiceClusters from '../sections/ServiceClusters'
@@ -38,7 +37,6 @@ export default function Home() {
       <div className="hidden md:block">
         <Hero />
         <FreeAudit />
-        <HorizontalTagsMarquee />
         <Services />
         <ServiceClusters />
         <Features />

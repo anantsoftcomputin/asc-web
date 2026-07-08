@@ -14,7 +14,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-1",
     title: "Pawppy.in",
     category: "petcare",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_12.01.45PM.webp",
+    image: "/assets/images/blog/pet-clinic-management-software.jpg",
     shortDesc: "Connecting pet owners with trusted care",
     fullDesc: "Pawppy is a platform that connects pet owners with verified pet service providers, offering bookings, vet consultations, and pet essentials.",
     detailedDesc: "Anant Soft Computing is delighted to feature Pawppy.in, a dedicated online marketplace designed to connect pet owners with a network of reliable and passionate pet care professionals.",
@@ -29,7 +29,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-2",
     title: "Ikama.in",
     category: "franchise",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2025-09-15_at_11.50.41AM.png",
+    image: "/assets/images/blog/custom-vs-ready-made-software.jpg",
     shortDesc: "Your gateway to franchise opportunities",
     fullDesc: "A platform that connects entrepreneurs with franchise chains through verified listings and lead management.",
     detailedDesc: "Anant Soft Computing is proud to present ikama.in, a premier online platform dedicated to connecting aspiring entrepreneurs with the perfect franchise opportunities.",
@@ -44,7 +44,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-3",
     title: "OEC CRM",
     category: "crm",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/oeccrm.webp",
+    image: "/assets/images/blog/crm-stop-losing-leads.jpg",
     shortDesc: "Optimizing customer relationships with OEC CRM.",
     fullDesc: "An enterprise CRM built for OEC to manage leads, students, fees, counseling, and communication.",
     detailedDesc: "OEC CRM provides a powerful platform for managing customer interactions, streamlining sales processes, and enhancing customer satisfaction.",
@@ -59,7 +59,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-4",
     title: "OEC India",
     category: "education",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_12.58.47AM.png",
+    image: "/assets/images/blog/education-crm-consultants.jpg",
     shortDesc: "Real-time virtual classroom for remote learning",
     fullDesc: "A platform providing virtual classroom experiences with live classes and collaborative tools.",
     detailedDesc: "A platform providing virtual classroom experiences with live classes and collaborative tools.",
@@ -74,7 +74,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-5",
     title: "Espionline",
     category: "education",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.00.14AM.png",
+    image: "/assets/images/blog/mobile-app-development-cost-india.jpg",
     shortDesc: "Real-time virtual classroom for remote learning",
     fullDesc: "A scalable online classroom system supporting HD live classes, notes, student tracking, and fee management.",
     detailedDesc: "A platform providing virtual classroom experiences with live classes and collaborative tools.",
@@ -89,7 +89,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-6",
     title: "Indraprasth Foundation",
     category: "ngo",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.04.13AM.png",
+    image: "/assets/images/blog/google-business-profile-local-seo.jpg",
     shortDesc: "Empowering communities through Indraprasth Foundation.",
     fullDesc: "A modern NGO website built for showcasing projects, collecting donations, and enabling volunteer applications.",
     detailedDesc: "Indraprasth Foundation is dedicated to social welfare, focusing on empowering underprivileged communities through education, healthcare, and skill development.",
@@ -104,7 +104,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-7",
     title: "Edustation",
     category: "education",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.06.06AM.png",
+    image: "/assets/images/blog/ai-chatbot-small-business.jpg",
     shortDesc: "Empowering education through innovative solutions.",
     fullDesc: "A platform built for schools to manage students, attendance, fees, and study materials with responsive dashboards.",
     detailedDesc: "Edustation offers cutting-edge educational tools and platforms to enhance learning experiences.",
@@ -119,7 +119,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-8",
     title: "SMHRI Hospital",
     category: "healthcare",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.08.15AM.png",
+    image: "/assets/images/blog/hospital-seo-appointments.jpg",
     shortDesc: "Quality healthcare services at SMHRI Hospital.",
     fullDesc: "Hospital website and management system built with appointment booking, doctor profiles, and patient communication.",
     detailedDesc: "SMHRI Hospital is committed to delivering high-quality healthcare with advanced medical facilities and compassionate care.",
@@ -134,7 +134,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-9",
     title: "ESPI CRM",
     category: "crm",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.10.34AM.png",
+    image: "/assets/images/blog/website-vs-web-app.jpg",
     shortDesc: "Streamlined customer management with ESPI CRM.",
     fullDesc: "A CRM for ESPI handling leads, inquiries, student management, task workflows, and communication automation.",
     detailedDesc: "ESPI CRM offers a comprehensive solution for managing customer relationships, enhancing productivity, and streamlining sales processes.",
@@ -149,7 +149,7 @@ const FALLBACK_PROJECTS = [
     id: "pfp-10",
     title: "StudyStreak",
     category: "education",
-    image: "https://anantsoftcomputing.com/media/portfolio/projects/gallery/Screenshot_2024-11-25_at_1.12.27AM.png",
+    image: "/assets/images/blog/whatsapp-automation-follow-up.jpg",
     shortDesc: "Achieve academic goals with StudyStreak.",
     fullDesc: "An AI-powered study planning and analytics platform for students to track progress, join live classes, and access resources.",
     detailedDesc: "Studystreak is your partner in achieving academic success through consistent study habits and progress tracking.",
@@ -162,6 +162,25 @@ const FALLBACK_PROJECTS = [
   },
 ];
 
+const PROJECT_IMAGE_FALLBACKS = {
+  petcare: "/assets/images/blog/pet-clinic-management-software.jpg",
+  franchise: "/assets/images/blog/custom-vs-ready-made-software.jpg",
+  crm: "/assets/images/blog/crm-stop-losing-leads.jpg",
+  education: "/assets/images/blog/education-crm-consultants.jpg",
+  ngo: "/assets/images/blog/google-business-profile-local-seo.jpg",
+  healthcare: "/assets/images/blog/hospital-seo-appointments.jpg",
+  mobile: "/assets/images/blog/mobile-app-development-cost-india.jpg",
+  web: "/assets/images/blog/website-vs-web-app.jpg",
+  other: "/assets/images/blog/custom-vs-ready-made-software.jpg",
+};
+
+function resolveProjectImage(src, category) {
+  if (!src || src.includes("anantsoftcomputing.com/media/portfolio")) {
+    return PROJECT_IMAGE_FALLBACKS[category] || PROJECT_IMAGE_FALLBACKS.other;
+  }
+  return src;
+}
+
 function normalizeProject(doc) {
   const stats = {};
   if (doc.stat1Label && doc.stat1Value) stats[doc.stat1Label] = doc.stat1Value;
@@ -172,7 +191,7 @@ function normalizeProject(doc) {
     id: doc.id,
     title: doc.title || '',
     category: doc.category || 'other',
-    image: doc.image || '',
+    image: resolveProjectImage(doc.image, doc.category || 'other'),
     gradient: doc.gradient || 'from-primary-400 to-primary-600',
     shortDesc: doc.shortDesc || doc.description || '',
     fullDesc: doc.fullDesc || doc.description || '',

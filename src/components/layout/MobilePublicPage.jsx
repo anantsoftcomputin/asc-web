@@ -20,6 +20,7 @@ import {
   Sparkles,
   UsersRound,
 } from "lucide-react";
+import { businessStats } from "../../lib/site-links";
 
 const pages = {
   "/about": {
@@ -29,9 +30,9 @@ const pages = {
     icon: UsersRound,
     cta: { label: "Work with us", href: "/contact" },
     stats: [
-      ["10+", "years"],
-      ["250+", "projects"],
-      ["95%", "satisfaction"],
+      [businessStats.years, "years"],
+      [businessStats.projects, "projects"],
+      [businessStats.satisfaction, "satisfaction"],
     ],
     cards: [
       ["Client-first", "Clear discovery, fast feedback, and honest technical direction."],
@@ -64,7 +65,7 @@ const pages = {
     icon: FolderKanban,
     cta: { label: "Discuss similar work", href: "/contact" },
     stats: [
-      ["250+", "delivered"],
+      [businessStats.projects, "delivered"],
       ["50K+", "sessions"],
       ["99.9%", "uptime focus"],
     ],
