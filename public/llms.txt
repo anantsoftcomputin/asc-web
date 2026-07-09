@@ -630,6 +630,24 @@ Tech stack:
 - E-commerce website architecture
 - SEO-oriented content structure
 
+### OurVadodara News App
+
+Project type: Mobile news application, Android app, iOS app, local news platform
+
+Summary:
+
+- Mobile news application for OurVadodara, built for Vadodara updates, breaking stories, city events, and community information
+- Designed around a local news feed, category browsing, mobile-first article reading, and timely update workflows
+- Included in the AnantSoftComputing portfolio as a news and media mobile app development project
+
+Tech stack:
+
+- Android
+- iOS
+- Mobile application development
+- News app architecture
+- Push-notification-ready content flow
+
 ### ESPI CRM
 
 URL: https://anantsoft.com/case-studies/espi-crm

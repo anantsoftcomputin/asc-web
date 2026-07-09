@@ -20,6 +20,7 @@ export const metadata = {
     'Trinetra Studio ecommerce website',
     'Connexsould mobile app',
     'Baagay ecommerce website',
+    'OurVadodara news app',
     'franchise management software India',
     'custom software examples India',
   ],
@@ -63,7 +64,7 @@ const portfolioItemListSchema = {
   "name": "AnantSoftComputing Software Project Portfolio",
   "description": "Case studies of software projects delivered by AnantSoftComputing across CRM, education, healthcare, NGO, petcare, and enterprise sectors.",
   "url": "https://anantsoft.com/portfolio",
-  "numberOfItems": 14,
+  "numberOfItems": 15,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -228,6 +229,19 @@ const portfolioItemListSchema = {
         "description": "Responsive e-commerce website for Baagay with product catalogue structure, category browsing, brand presentation, and mobile-first shopping flow.",
         "creator": { "@id": "https://anantsoft.com/#organization" },
         "keywords": ["e-commerce website", "ReactJS", "responsive storefront", "SEO", "product catalogue"],
+      },
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "item": {
+        "@type": "SoftwareApplication",
+        "name": "OurVadodara News App",
+        "description": "Mobile news application for OurVadodara, built for Vadodara updates, breaking stories, city events, local categories, and mobile-first article reading.",
+        "applicationCategory": "NewsApplication",
+        "operatingSystem": "Android, iOS",
+        "creator": { "@id": "https://anantsoft.com/#organization" },
+        "keywords": ["news app", "mobile app development", "Vadodara news", "Android app", "iOS app", "push notifications"],
       },
     },
   ],

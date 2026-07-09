@@ -87,6 +87,25 @@ const REQUIRED_PROJECTS = [
     solutionDelivered: "We delivered a responsive e-commerce website with product catalogue structure, category browsing, brand-focused content, and conversion-oriented navigation.",
     caseStudyOutcome: "Baagay now has a structured e-commerce presence that improves product visibility and gives customers a clearer path to explore the brand online.",
   },
+  {
+    id: "pfp-ourvadodara-news-app",
+    title: "OurVadodara News App",
+    category: "mobile",
+    image: "/assets/images/blog/mobile-app-development-cost-india.jpg",
+    shortDesc: "Mobile news application for OurVadodara.",
+    fullDesc: "OurVadodara News App is a mobile news application built to help local readers follow Vadodara updates, breaking stories, city events, and community information.",
+    detailedDesc: "Anant Soft Computing built the OurVadodara News App as a digital news platform for city-focused content, giving users a convenient way to discover local headlines, browse categories, receive timely updates, and stay connected with Vadodara news on mobile.",
+    technologies: ["Android", "iOS", "Mobile App", "News App", "Push Notifications"],
+    features: ["Local News Feed", "Category Browsing", "Breaking News Updates", "Mobile Article Reading", "Push Notification Flow"],
+    results: ["Dedicated mobile news experience", "Faster access to city updates", "Mobile-first platform for local readers"],
+    links: { live: null, github: null },
+    stats: { type: "News App", focus: "Vadodara", platform: "Mobile" },
+    gradient: "from-red-500 to-slate-800",
+    problemStatement: "OurVadodara needed a mobile-first news experience that could help local readers follow city updates, breaking stories, events, and community information.",
+    ourApproach: "We approached the product as a fast local-news app, prioritising readable article layouts, category browsing, timely updates, and a content structure that can scale with frequent publishing.",
+    solutionDelivered: "We delivered a mobile news application experience with a local news feed, category-based browsing, article reading flow, and a foundation for timely city updates and push notifications.",
+    caseStudyOutcome: "OurVadodara News App gives the brand a dedicated mobile channel for Vadodara-focused news and community updates.",
+  },
 ];
 
 // Hardcoded fallback shown until admin populates Firestore
