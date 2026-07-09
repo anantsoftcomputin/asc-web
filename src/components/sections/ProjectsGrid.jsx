@@ -27,8 +27,69 @@ const GAZRA_PROJECT = {
   caseStudyOutcome: "Gazra.org now gives Project Gazra a central digital presence for awareness, resources, events, and community engagement.",
 };
 
-const FALLBACK_PROJECTS = [
+const REQUIRED_PROJECTS = [
   GAZRA_PROJECT,
+  {
+    id: "fp-trinetra-studio",
+    title: "Trinetra Studio",
+    category: "e-commerce",
+    image: "/assets/images/blog/website-vs-web-app.jpg",
+    shortDesc: "E-commerce website for Trinetra Studio",
+    fullDesc: "Trinetra Studio is an e-commerce website built to present products clearly, support browsing and enquiries, and give the brand a professional online storefront.",
+    detailedDesc: "Anant Soft Computing built Trinetra Studio as a responsive e-commerce presence focused on product discovery, visual presentation, trust, and a smooth path from browsing to customer enquiry or purchase intent.",
+    technologies: ["React", "E-commerce", "Responsive Web", "SEO"],
+    features: ["Product Catalogue", "Responsive Storefront", "Brand Presentation", "SEO-Friendly Structure", "Customer Enquiry Paths"],
+    results: ["Professional online storefront", "Clearer product discovery", "Mobile-friendly e-commerce experience"],
+    links: { live: "https://trinetrastudio.in", github: null },
+    stats: { type: "E-commerce", platform: "Website", status: "Live" },
+    gradient: "from-fuchsia-500 to-rose-600",
+    problemStatement: "Trinetra Studio needed a professional e-commerce website that could present products online, build trust with visitors, and support customer discovery beyond social media or offline channels.",
+    ourApproach: "We structured the website around simple product browsing, mobile-first presentation, brand clarity, and conversion-focused paths.",
+    solutionDelivered: "We delivered a responsive e-commerce website with product-focused pages, clean visual hierarchy, SEO-ready structure, and customer-friendly navigation.",
+    caseStudyOutcome: "Trinetra Studio now has a dedicated digital storefront that supports product visibility, customer discovery, and a more professional online buying journey.",
+  },
+  {
+    id: "fp-connexsould",
+    title: "Connexsould",
+    category: "mobile",
+    image: "/assets/images/blog/mobile-app-development-cost-india.jpg",
+    shortDesc: "Upcoming Android and iOS social networking mobile app",
+    fullDesc: "Connexsould is an upcoming Android and iOS mobile application combining social feeds, community interaction, messaging, and media sharing.",
+    detailedDesc: "Anant Soft Computing is developing Connexsould as a cross-platform social mobile app where users can connect, share media, follow updates, communicate, and build communities in one integrated experience.",
+    technologies: ["Android", "iOS", "Mobile App", "Realtime Chat", "Social Networking"],
+    features: ["User Profiles", "Social Feeds", "Media Sharing", "Realtime Messaging", "Community Workflows", "Android & iOS Delivery"],
+    results: ["Upcoming cross-platform social app", "Unified feed and messaging experience", "Designed for Android and iOS launch"],
+    links: { live: "https://connexsould.com", github: null },
+    stats: { status: "Upcoming", platforms: "Android + iOS", type: "Social App" },
+    gradient: "from-sky-500 to-indigo-700",
+    problemStatement: "Connexsould needed a mobile-first product concept that could combine feed-based discovery, social connection, direct communication, and media sharing.",
+    ourApproach: "We approached the product as a unified social experience with scalable architecture for profiles, feeds, engagement, and realtime communication.",
+    solutionDelivered: "We are delivering a cross-platform mobile application for Android and iOS with user profiles, social feed interactions, media sharing, messaging, and community-oriented workflows.",
+    caseStudyOutcome: "Connexsould is positioned as an upcoming social networking product that brings feed, community, and messaging interactions into one mobile application experience.",
+  },
+  {
+    id: "fp-baagay",
+    title: "Baagay",
+    category: "e-commerce",
+    image: "/assets/images/blog/custom-vs-ready-made-software.jpg",
+    shortDesc: "E-commerce website for Baagay",
+    fullDesc: "Baagay is an e-commerce website built to help the brand showcase products, guide customers through discovery, and support a clean online shopping or enquiry experience.",
+    detailedDesc: "Anant Soft Computing built Baagay as a responsive e-commerce website with a product-led structure, clear category browsing, trust-focused presentation, and mobile-friendly customer journeys.",
+    technologies: ["React", "E-commerce", "Responsive Web", "SEO"],
+    features: ["Product Catalogue", "Category Browsing", "Responsive Storefront", "Brand Presentation", "Customer Conversion Paths"],
+    results: ["Professional e-commerce presence", "Improved product visibility", "Mobile-friendly storefront"],
+    links: { live: null, github: null },
+    stats: { type: "E-commerce", platform: "Website", focus: "Products" },
+    gradient: "from-emerald-500 to-teal-700",
+    problemStatement: "Baagay needed a clean e-commerce website that could move the brand from scattered product presentation to a structured digital storefront customers could browse easily.",
+    ourApproach: "We focused on product clarity, mobile usability, category structure, and trust-building presentation.",
+    solutionDelivered: "We delivered a responsive e-commerce website with product catalogue structure, category browsing, brand-focused content, and conversion-oriented navigation.",
+    caseStudyOutcome: "Baagay now has a structured e-commerce presence that improves product visibility and gives customers a clearer path to explore the brand online.",
+  },
+];
+
+const FALLBACK_PROJECTS = [
+  ...REQUIRED_PROJECTS,
   {
     id: "fp-1", title: "Pawppy.in", category: "petcare",
     image: "/assets/images/blog/pet-clinic-management-software.jpg",
@@ -142,6 +203,7 @@ const PROJECT_IMAGE_FALLBACKS = {
   healthcare: "/assets/images/blog/hospital-seo-appointments.jpg",
   mobile: "/assets/images/blog/mobile-app-development-cost-india.jpg",
   web: "/assets/images/blog/website-vs-web-app.jpg",
+  "e-commerce": "/assets/images/blog/custom-vs-ready-made-software.jpg",
   other: "/assets/images/blog/custom-vs-ready-made-software.jpg",
 };
 
@@ -179,14 +241,20 @@ function normalizeProject(doc) {
   };
 }
 
-function ensureGazraProject(projects) {
-  const hasGazra = projects.some((project) => {
-    const title = (project.title || "").toLowerCase();
+function ensureRequiredProjects(projects) {
+  const projectKeys = new Set(
+    projects.flatMap((project) => [
+      (project.title || "").toLowerCase(),
+      (project.links?.live || "").toLowerCase(),
+    ])
+  );
+  const missingProjects = REQUIRED_PROJECTS.filter((project) => {
+    const title = project.title.toLowerCase();
     const liveUrl = (project.links?.live || "").toLowerCase();
-    return title.includes("gazra") || liveUrl.includes("gazra.org");
+    return !projectKeys.has(title) && (!liveUrl || !projectKeys.has(liveUrl));
   });
 
-  return hasGazra ? projects : [GAZRA_PROJECT, ...projects];
+  return missingProjects.length ? [...missingProjects, ...projects] : projects;
 }
 
 function ProjectImage({ src, alt, gradient, className }) {
@@ -216,6 +284,7 @@ const ALL_CATEGORIES = [
   { id: "crm", name: "CRM", icon: "📊" },
   { id: "franchise", name: "Franchise", icon: "🏪" },
   { id: "petcare", name: "Pet Care", icon: "🐾" },
+  { id: "e-commerce", name: "E-commerce", icon: "🛒" },
   { id: "mobile", name: "Mobile Apps", icon: "📱" },
   { id: "web", name: "Web", icon: "🌐" },
 ];
@@ -257,12 +326,12 @@ export default function PortfolioGrid() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
   const [modalTab, setModalTab] = useState('overview');
-  const [projects, setProjects] = useState(() => ensureGazraProject(FALLBACK_PROJECTS));
+  const [projects, setProjects] = useState(() => ensureRequiredProjects(FALLBACK_PROJECTS));
 
   useEffect(() => {
     projectAPI.getAll().then(result => {
       if (result.success && result.data.length > 0) {
-        setProjects(ensureGazraProject(result.data.map(normalizeProject)));
+        setProjects(ensureRequiredProjects(result.data.map(normalizeProject)));
       }
     });
   }, []);

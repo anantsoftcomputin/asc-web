@@ -574,6 +574,62 @@ Results:
 - Improved access to community information and resources
 - Mobile-friendly website for awareness, events, and engagement
 
+### Trinetra Studio
+
+External URL: https://trinetrastudio.in
+
+Project type: E-commerce website, responsive storefront, product catalogue
+
+Summary:
+
+- E-commerce website for Trinetra Studio, built to present products clearly and support customer discovery
+- Mobile-friendly storefront structure with product presentation, enquiry paths, and SEO-ready pages
+- Included in the AnantSoftComputing portfolio as an e-commerce website development example
+
+Tech stack:
+
+- React
+- Responsive web design
+- E-commerce website architecture
+- SEO-oriented content structure
+
+### Connexsould
+
+External URL: https://connexsould.com
+
+Project type: Upcoming Android and iOS social networking mobile application
+
+Summary:
+
+- Upcoming mobile app for Android and iOS
+- Product concept combines social feeds, community interaction, media sharing, and realtime messaging
+- Positioned as a social mobile application inspired by interaction patterns from Instagram, Facebook, and WhatsApp
+- Included in the AnantSoftComputing portfolio as a cross-platform mobile app development project
+
+Tech stack:
+
+- Android
+- iOS
+- Mobile application development
+- Realtime chat and social networking architecture
+
+### Baagay
+
+Project type: E-commerce website, responsive storefront, product catalogue
+
+Summary:
+
+- E-commerce website for Baagay, built to showcase products and support online customer discovery
+- Product-led structure with category browsing, brand presentation, and mobile-first shopping or enquiry flow
+- Included in the AnantSoftComputing portfolio as an e-commerce website development example
+
+Tech stack:
+
+- React
+- Responsive web design
+- E-commerce website architecture
+- SEO-oriented content structure
+
 ### ESPI CRM
 
 URL: https://anantsoft.com/case-studies/espi-crm
